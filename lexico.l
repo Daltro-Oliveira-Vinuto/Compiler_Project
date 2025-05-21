@@ -1,27 +1,26 @@
 %{
 #include <stdio.h>
+#include "sintatico.tab.h" // importante para reconhecer os tokens do parse
 %}
 
 %%
 
 [ \t\n]+               ;  // ignora espaços em branco
 
-[0-9]+                 { printf("Numérico: %s\n", yytext); }
+"print"                { return PRINT; }
 
-[a-zA-Z][a-zA-Z0-9]*   { printf("Identificador: %s\n", yytext); }
+[0-9]+                 { yylval = atoi(yytext); return NUM; }
 
-"//".* {printf("Comentário: %s\n", yytext); }
+[a-zA-Z][a-zA-Z0-9]*   { return ID; }
 
-"/*"([^*]|\*+[^*/])*\*+"/" {printf("Comentário: %s\n", yytext); }
+"="                    { return ASSIGN; }
+"+"                    { return PLUS; }
 
-"+"                    { printf("Operador: %s\n", yytext); }
-"-"                    { printf("Operador: %s\n", yytext); }
-"*"                    { printf("Operador: %s\n", yytext); }
-"/"                    { printf("Operador: %s\n", yytext); }
-"%"                    { printf("Operador: %s\n", yytext); }
+";"                    { return ';'; }
+"{"                    { return '{'; }
+"}"                    { return '}'; }
 
-.                      { printf("Outro: %s\n", yytext); }
+.                      { return yytext[0]; }
 
 %%
-
 int yywrap() { return 1; }

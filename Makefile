@@ -1,6 +1,7 @@
 all:
+	bison -d sintatico.y
 	flex lexico.l
-	gcc lex.yy.c -o lexico.exe -lfl
+	gcc sintatico.tab.c lex.yy.c -o analisador
 
 clean:
-	rm -f lex.yy.c lexico.exe
+	rm -f *.o *.tab.* lex.yy.c analisador
