@@ -17,7 +17,7 @@ Members:
 ```bash
 cd /c/your_directory/Compiler_Project
 make
-./analisador < teste.txt
+./analisador < ./testes/soma_e_print.txt
 ```
 Resultado
 ```bash
