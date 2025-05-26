@@ -509,7 +509,7 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int8 yyrline[] =
 {
        0,    20,    20,    24,    28,    29,    33,    34,    38,    39,
-      43,    44,    48,    49,    50,    51
+      43,    44,    48,    52,    53,    54
 };
 #endif
 
@@ -1093,30 +1093,33 @@ yyreduce:
 
   case 12: /* expression: ID ASSIGN expression  */
 #line 48 "sintatico.y"
-                                 { printf("Atribuição\n"); }
-#line 1098 "sintatico.tab.c"
+                         {
+        printf("Uso de identificador\n");
+        printf("Atribuição\n");
+    }
+#line 1101 "sintatico.tab.c"
     break;
 
   case 13: /* expression: expression PLUS expression  */
-#line 49 "sintatico.y"
+#line 52 "sintatico.y"
                                  { printf("Soma\n"); }
-#line 1104 "sintatico.tab.c"
+#line 1107 "sintatico.tab.c"
     break;
 
   case 14: /* expression: ID  */
-#line 50 "sintatico.y"
+#line 53 "sintatico.y"
                                  { printf("Uso de identificador\n"); }
-#line 1110 "sintatico.tab.c"
+#line 1113 "sintatico.tab.c"
     break;
 
   case 15: /* expression: NUM  */
-#line 51 "sintatico.y"
+#line 54 "sintatico.y"
                                  { printf("Número\n"); }
-#line 1116 "sintatico.tab.c"
+#line 1119 "sintatico.tab.c"
     break;
 
 
-#line 1120 "sintatico.tab.c"
+#line 1123 "sintatico.tab.c"
 
       default: break;
     }
@@ -1309,7 +1312,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 54 "sintatico.y"
+#line 57 "sintatico.y"
 
 
 void yyerror(const char *s) {
