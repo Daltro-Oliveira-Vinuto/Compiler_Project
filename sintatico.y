@@ -45,13 +45,22 @@ print_stmt:
     ;
 
 expression:
-    ID ASSIGN expression {
-        printf("Identificador\n");
-        printf("Atribuição\n");
-    }
-    | expression PLUS expression { printf("Soma\n"); }
-    | ID                         { printf("Identificador\n"); }
-    | NUM                        { printf("Número\n"); }
+      ID ASSIGN expression {
+          printf("Identificador\n");
+          printf("Atribuição\n");
+      }
+    | expression PLUS expression {
+          printf("Soma\n");
+      }
+    | PLUS expression {
+          printf("Operador\n");
+      }
+    | ID {
+          printf("Identificador\n");
+      }
+    | NUM {
+          printf("Número\n");
+      }
     ;
 
 %%
