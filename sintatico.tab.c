@@ -1094,7 +1094,7 @@ yyreduce:
   case 12: /* expression: ID ASSIGN expression  */
 #line 48 "sintatico.y"
                          {
-        printf("Uso de identificador\n");
+        printf("Identificador\n");
         printf("Atribuição\n");
     }
 #line 1101 "sintatico.tab.c"
@@ -1108,7 +1108,7 @@ yyreduce:
 
   case 14: /* expression: ID  */
 #line 53 "sintatico.y"
-                                 { printf("Uso de identificador\n"); }
+                                 { printf("Identificador\n"); }
 #line 1113 "sintatico.tab.c"
     break;
 

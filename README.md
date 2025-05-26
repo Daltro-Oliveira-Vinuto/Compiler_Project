@@ -17,14 +17,26 @@ Members:
 ```bash
 cd /c/your_directory/Compiler_Project
 make
-./analisador < ./testes/soma_e_print.txt
+./analisador < ./testes/multiple_comands.txt
 ```
+
+Exemplo
+```bash
+{ a = 3; b = 2 + 3; print a; print b; }
+```
+
 Resultado
 ```bash
 Número
+Identificador
+Atribuição
+Número
 Número
 Soma
+Identificador
 Atribuição
-Uso de identificador
+Identificador
+Comando de impressão com expressão
+Identificador
 Comando de impressão com expressão
 ```
