@@ -9,6 +9,10 @@ void yyerror(const char *s);
 %token ID NUM
 %token PLUS ASSIGN
 %token PRINT
+%token '{' '}' ';'
+
+%right ASSIGN
+%left PLUS
 
 %%
 

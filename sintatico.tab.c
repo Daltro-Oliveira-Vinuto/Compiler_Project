@@ -508,8 +508,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    16,    16,    20,    24,    25,    29,    30,    34,    35,
-      39,    40,    44,    45,    46,    47
+       0,    20,    20,    24,    28,    29,    33,    34,    38,    39,
+      43,    44,    48,    49,    50,    51
 };
 #endif
 
@@ -554,7 +554,7 @@ static const yytype_int8 yypact[] =
 {
       -7,    -9,    16,    -9,    -1,    -9,    13,    -9,     1,    -9,
       -9,    -9,    -9,    -9,     7,    11,    -9,     8,    11,    -9,
-      15,    -9,    15
+      15,    -9,    -9
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -1080,37 +1080,37 @@ yyreduce:
   switch (yyn)
     {
   case 10: /* print_stmt: PRINT expression ';'  */
-#line 39 "sintatico.y"
+#line 43 "sintatico.y"
                          { printf("Comando de impressão com expressão\n"); }
 #line 1086 "sintatico.tab.c"
     break;
 
   case 11: /* print_stmt: PRINT ';'  */
-#line 40 "sintatico.y"
+#line 44 "sintatico.y"
                          { printf("Comando de impressão vazio\n"); }
 #line 1092 "sintatico.tab.c"
     break;
 
   case 12: /* expression: ID ASSIGN expression  */
-#line 44 "sintatico.y"
+#line 48 "sintatico.y"
                                  { printf("Atribuição\n"); }
 #line 1098 "sintatico.tab.c"
     break;
 
   case 13: /* expression: expression PLUS expression  */
-#line 45 "sintatico.y"
+#line 49 "sintatico.y"
                                  { printf("Soma\n"); }
 #line 1104 "sintatico.tab.c"
     break;
 
   case 14: /* expression: ID  */
-#line 46 "sintatico.y"
+#line 50 "sintatico.y"
                                  { printf("Uso de identificador\n"); }
 #line 1110 "sintatico.tab.c"
     break;
 
   case 15: /* expression: NUM  */
-#line 47 "sintatico.y"
+#line 51 "sintatico.y"
                                  { printf("Número\n"); }
 #line 1116 "sintatico.tab.c"
     break;
@@ -1309,7 +1309,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 50 "sintatico.y"
+#line 54 "sintatico.y"
 
 
 void yyerror(const char *s) {
