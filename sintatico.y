@@ -173,6 +173,8 @@ factor:
     | var
     | call
     | NUM
+    | PLUS factor
+    | MINUS factor
     ;
 
 call:

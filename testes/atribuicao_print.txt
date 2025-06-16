@@ -1,1 +1,1 @@
-{ y = 5; print y; }
+int main(){ y = 5; print (y); }

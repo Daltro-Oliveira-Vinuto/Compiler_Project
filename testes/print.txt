@@ -1,1 +1,1 @@
-{ print 42; }
+int main(){ print (42); }
