@@ -22,21 +22,15 @@ make
 
 Exemplo
 ```bash
-{ a = 3; b = 2 + 3; print a; print b; }
+int main(){
+    a = 3;
+    b = 2 + 3;
+    print (a);
+    print (b);
+}
 ```
 
 Resultado
 ```bash
-Número
-Identificador
-Atribuição
-Número
-Número
-Soma
-Identificador
-Atribuição
-Identificador
-Comando de impressão com expressão
-Identificador
-Comando de impressão com expressão
+Sintaticamente correto
 ```
