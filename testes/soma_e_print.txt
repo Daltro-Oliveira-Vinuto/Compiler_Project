@@ -1,1 +1,4 @@
-int main() { x = 1 + 2; print (x); } // Soma e print da soma
+int main() {
+    x = 1 + 2;
+    print (x);
+} // Soma e print da soma

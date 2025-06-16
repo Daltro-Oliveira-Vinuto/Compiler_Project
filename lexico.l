@@ -9,8 +9,7 @@
 
 %%
 
-[ \t]+              ;
-\n                  ;
+[ \t\n\r]+         ; // ignora espaços, tabs, nova linha e '\r'
 
 "print"             { return PRINT; }
 
