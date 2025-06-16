@@ -454,7 +454,7 @@ char *yytext;
 #line 1 "lexico.l"
 #line 2 "lexico.l"
 #include <stdio.h>
-#include "sintatico.tab.h" // importante para reconhecer os tokens do parse
+#include "sintatico.tab.h"
 #line 458 "lex.yy.c"
 #line 459 "lex.yy.c"
 
@@ -747,46 +747,46 @@ YY_RULE_SETUP
 case 3:
 YY_RULE_SETUP
 #line 12 "lexico.l"
-{ yylval = atoi(yytext); return NUM; }
+{ return NUM; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "lexico.l"
+#line 13 "lexico.l"
 { return ID; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 16 "lexico.l"
+#line 15 "lexico.l"
 { return ASSIGN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 17 "lexico.l"
+#line 16 "lexico.l"
 { return PLUS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 19 "lexico.l"
+#line 18 "lexico.l"
 { return ';'; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 20 "lexico.l"
+#line 19 "lexico.l"
 { return '{'; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 21 "lexico.l"
+#line 20 "lexico.l"
 { return '}'; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 23 "lexico.l"
+#line 22 "lexico.l"
 { return yytext[0]; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 25 "lexico.l"
+#line 24 "lexico.l"
 ECHO;
 	YY_BREAK
 #line 792 "lex.yy.c"
@@ -1794,7 +1794,9 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 25 "lexico.l"
+#line 24 "lexico.l"
 
-int yywrap() { return 1; }
 
+int yywrap() {
+    return 1;
+}

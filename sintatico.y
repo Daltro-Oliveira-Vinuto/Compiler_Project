@@ -40,35 +40,27 @@ expr_stmt:
     ;
 
 print_stmt:
-    PRINT expression ';' { printf("Comando de impressão com expressão\n"); }
-    | PRINT ';'          { printf("Comando de impressão vazio\n"); }
+    PRINT expression ';'
+    | PRINT ';'
     ;
 
 expression:
-      ID ASSIGN expression {
-          printf("Identificador\n");
-          printf("Atribuição\n");
-      }
-    | expression PLUS expression {
-          printf("Soma\n");
-      }
-    | PLUS expression {
-          printf("Operador\n");
-      }
-    | ID {
-          printf("Identificador\n");
-      }
-    | NUM {
-          printf("Número\n");
-      }
+      ID ASSIGN expression
+    | expression PLUS expression
+    | PLUS expression
+    | ID
+    | NUM
     ;
 
 %%
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Erro: %s\n", s);
+    printf("Erro de sintaxe\n");
 }
 
 int main() {
-    return yyparse();
+    if (yyparse() == 0) {
+        printf("Sintaticamente correto\n");
+    }
+    return 0;
 }

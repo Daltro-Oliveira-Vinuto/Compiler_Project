@@ -509,7 +509,7 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int8 yyrline[] =
 {
        0,    20,    20,    24,    28,    29,    33,    34,    38,    39,
-      43,    44,    48,    52,    55,    58,    61
+      43,    44,    48,    49,    50,    51,    52
 };
 #endif
 
@@ -1079,61 +1079,8 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 10: /* print_stmt: PRINT expression ';'  */
-#line 43 "sintatico.y"
-                         { printf("Comando de impressão com expressão\n"); }
-#line 1086 "sintatico.tab.c"
-    break;
 
-  case 11: /* print_stmt: PRINT ';'  */
-#line 44 "sintatico.y"
-                         { printf("Comando de impressão vazio\n"); }
-#line 1092 "sintatico.tab.c"
-    break;
-
-  case 12: /* expression: ID ASSIGN expression  */
-#line 48 "sintatico.y"
-                           {
-          printf("Identificador\n");
-          printf("Atribuição\n");
-      }
-#line 1101 "sintatico.tab.c"
-    break;
-
-  case 13: /* expression: expression PLUS expression  */
-#line 52 "sintatico.y"
-                                 {
-          printf("Soma\n");
-      }
-#line 1109 "sintatico.tab.c"
-    break;
-
-  case 14: /* expression: PLUS expression  */
-#line 55 "sintatico.y"
-                      {
-          printf("Operador\n");
-      }
-#line 1117 "sintatico.tab.c"
-    break;
-
-  case 15: /* expression: ID  */
-#line 58 "sintatico.y"
-         {
-          printf("Identificador\n");
-      }
-#line 1125 "sintatico.tab.c"
-    break;
-
-  case 16: /* expression: NUM  */
-#line 61 "sintatico.y"
-          {
-          printf("Número\n");
-      }
-#line 1133 "sintatico.tab.c"
-    break;
-
-
-#line 1137 "sintatico.tab.c"
+#line 1084 "sintatico.tab.c"
 
       default: break;
     }
@@ -1326,13 +1273,16 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 66 "sintatico.y"
+#line 55 "sintatico.y"
 
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Erro: %s\n", s);
+    printf("Erro\n");
 }
 
 int main() {
-    return yyparse();
+    if (yyparse() == 0) {
+        printf("Sintaticamente correto\n");
+    }
+    return 0;
 }

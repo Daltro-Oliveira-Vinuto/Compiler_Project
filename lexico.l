@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "sintatico.tab.h" // importante para reconhecer os tokens do parse
+#include "sintatico.tab.h"
 %}
 
 %%
@@ -9,8 +9,7 @@
 
 "print"                { return PRINT; }
 
-[0-9]+                 { yylval = atoi(yytext); return NUM; }
-
+[0-9]+                 { return NUM; }
 [a-zA-Z][a-zA-Z0-9]*   { return ID; }
 
 "="                    { return ASSIGN; }
@@ -23,4 +22,7 @@
 .                      { return yytext[0]; }
 
 %%
-int yywrap() { return 1; }
+
+int yywrap() {
+    return 1;
+}
