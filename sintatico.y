@@ -20,6 +20,8 @@ typedef struct {
     char* id;
 }
 
+%token PRINT
+
 %token <id> ID
 %token <num> NUM
 
@@ -103,11 +105,16 @@ statement:
     | selection_stmt
     | iteration_stmt
     | return_stmt
+    | print_stmt
     ;
 
 expression_stmt:
     expression SEMI
     | SEMI
+    ;
+
+print_stmt:
+    PRINT LPAREN expression RPAREN SEMI
     ;
 
 selection_stmt:

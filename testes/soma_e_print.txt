@@ -1,1 +1,1 @@
-{ x = 1 + 2; print x; }
+int main() { x = 1 + 2; print (x); }

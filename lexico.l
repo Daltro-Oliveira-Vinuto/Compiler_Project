@@ -12,6 +12,8 @@
 [ \t]+              ;
 \n                  ;
 
+"print"             { return PRINT; }
+
 "if"                { return IF; }
 "else"              { return ELSE; }
 "int"               { return INT; }

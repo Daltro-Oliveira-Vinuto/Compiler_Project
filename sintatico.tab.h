@@ -54,34 +54,35 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    ID = 258,                      /* ID  */
-    NUM = 259,                     /* NUM  */
-    IF = 260,                      /* IF  */
-    ELSE = 261,                    /* ELSE  */
-    INT = 262,                     /* INT  */
-    RETURN = 263,                  /* RETURN  */
-    VOID = 264,                    /* VOID  */
-    WHILE = 265,                   /* WHILE  */
-    ASSIGN = 266,                  /* ASSIGN  */
-    PLUS = 267,                    /* PLUS  */
-    MINUS = 268,                   /* MINUS  */
-    TIMES = 269,                   /* TIMES  */
-    OVER = 270,                    /* OVER  */
-    LT = 271,                      /* LT  */
-    LE = 272,                      /* LE  */
-    GT = 273,                      /* GT  */
-    GE = 274,                      /* GE  */
-    EQ = 275,                      /* EQ  */
-    NE = 276,                      /* NE  */
-    LOWER_THAN_ELSE = 277,         /* LOWER_THAN_ELSE  */
-    LPAREN = 278,                  /* LPAREN  */
-    RPAREN = 279,                  /* RPAREN  */
-    LBRACK = 280,                  /* LBRACK  */
-    RBRACK = 281,                  /* RBRACK  */
-    LBRACE = 282,                  /* LBRACE  */
-    RBRACE = 283,                  /* RBRACE  */
-    SEMI = 284,                    /* SEMI  */
-    COMMA = 285                    /* COMMA  */
+    PRINT = 258,                   /* PRINT  */
+    ID = 259,                      /* ID  */
+    NUM = 260,                     /* NUM  */
+    IF = 261,                      /* IF  */
+    ELSE = 262,                    /* ELSE  */
+    INT = 263,                     /* INT  */
+    RETURN = 264,                  /* RETURN  */
+    VOID = 265,                    /* VOID  */
+    WHILE = 266,                   /* WHILE  */
+    ASSIGN = 267,                  /* ASSIGN  */
+    PLUS = 268,                    /* PLUS  */
+    MINUS = 269,                   /* MINUS  */
+    TIMES = 270,                   /* TIMES  */
+    OVER = 271,                    /* OVER  */
+    LT = 272,                      /* LT  */
+    LE = 273,                      /* LE  */
+    GT = 274,                      /* GT  */
+    GE = 275,                      /* GE  */
+    EQ = 276,                      /* EQ  */
+    NE = 277,                      /* NE  */
+    LOWER_THAN_ELSE = 278,         /* LOWER_THAN_ELSE  */
+    LPAREN = 279,                  /* LPAREN  */
+    RPAREN = 280,                  /* RPAREN  */
+    LBRACK = 281,                  /* LBRACK  */
+    RBRACK = 282,                  /* RBRACK  */
+    LBRACE = 283,                  /* LBRACE  */
+    RBRACE = 284,                  /* RBRACE  */
+    SEMI = 285,                    /* SEMI  */
+    COMMA = 286                    /* COMMA  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -95,7 +96,7 @@ union YYSTYPE
     int num;
     char* id;
 
-#line 99 "sintatico.tab.h"
+#line 100 "sintatico.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
