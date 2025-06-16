@@ -46,6 +46,9 @@
 [0-9]+              { yylval.num = atoi(yytext); return NUM; }
 [a-zA-Z_][a-zA-Z0-9_]* { yylval.id = strdup(yytext); return ID; }
 
+"//".*                     ;  // Comentário de linha
+"/*"([^*]|\*+[^*/])*"*"+"/"   ;  // Comentário de bloco
+
 .                   { return yytext[0]; }
 
 %%
