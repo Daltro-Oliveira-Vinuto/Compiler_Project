@@ -1,66 +1,195 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int yylex();
 void yyerror(const char *s);
+extern int yylineno;
+
+typedef struct {
+    int num;
+    char* id;
+} YYSTYPE;
+
+#define YYSTYPE_IS_DECLARED 1
 %}
 
-%token ID NUM
-%token PLUS ASSIGN
-%token PRINT
-%token '{' '}' ';'
+%union {
+    int num;
+    char* id;
+}
+
+%token <id> ID
+%token <num> NUM
+
+%token IF ELSE INT RETURN VOID WHILE
 
 %right ASSIGN
-%left PLUS
+%left PLUS MINUS
+%left TIMES OVER
+%nonassoc LT LE GT GE EQ NE
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
+%token LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
+%token SEMI COMMA
+
+%start program
 
 %%
 
 program:
-    compound_stmt
+    declaration_list
+    ;
+
+declaration_list:
+    declaration_list declaration
+    | declaration
+    ;
+
+declaration:
+    var_declaration
+    | fun_declaration
+    ;
+
+var_declaration:
+    type_specifier ID SEMI
+    | type_specifier ID LBRACK NUM RBRACK SEMI
+    ;
+
+type_specifier:
+    INT
+    | VOID
+    ;
+
+fun_declaration:
+    type_specifier ID LPAREN params RPAREN compound_stmt
+    ;
+
+params:
+    param_list
+    | VOID
+    | /* vazio */ {}
+    ;
+
+param_list:
+    param_list COMMA param
+    | param
+    ;
+
+param:
+    type_specifier ID
+    | type_specifier ID LBRACK RBRACK
     ;
 
 compound_stmt:
-    '{' stmt_list '}'
+    LBRACE local_declarations statement_list RBRACE
     ;
 
-stmt_list:
-    stmt_list stmt
-    | /* vazio */
+local_declarations:
+    local_declarations var_declaration
+    | /* vazio */ {}
     ;
 
-stmt:
-    expr_stmt
-    | print_stmt
+statement_list:
+    statement_list statement
+    | /* vazio */ {}
     ;
 
-expr_stmt:
-    expression ';'
-    | ';'
+statement:
+    expression_stmt
+    | compound_stmt
+    | selection_stmt
+    | iteration_stmt
+    | return_stmt
     ;
 
-print_stmt:
-    PRINT expression ';'
-    | PRINT ';'
+expression_stmt:
+    expression SEMI
+    | SEMI
+    ;
+
+selection_stmt:
+      IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE
+    | IF LPAREN expression RPAREN statement ELSE statement
+    ;
+
+iteration_stmt:
+    WHILE LPAREN expression RPAREN statement
+    ;
+
+return_stmt:
+    RETURN SEMI
+    | RETURN expression SEMI
     ;
 
 expression:
-      ID ASSIGN expression
-    | expression PLUS expression
-    | PLUS expression
-    | ID
+    var ASSIGN expression
+    | simple_expression
+    ;
+
+var:
+    ID
+    | ID LBRACK expression RBRACK
+    ;
+
+simple_expression:
+    additive_expression relop additive_expression
+    | additive_expression
+    ;
+
+relop:
+    LE | LT | GT | GE | EQ | NE
+    ;
+
+additive_expression:
+    additive_expression addop term
+    | term
+    ;
+
+addop:
+    PLUS | MINUS
+    ;
+
+term:
+    term mulop factor
+    | factor
+    ;
+
+mulop:
+    TIMES | OVER
+    ;
+
+factor:
+    LPAREN expression RPAREN
+    | var
+    | call
     | NUM
+    ;
+
+call:
+    ID LPAREN args RPAREN
+    ;
+
+args:
+    arg_list
+    | /* vazio */ {}
+    ;
+
+arg_list:
+    arg_list COMMA expression
+    | expression
     ;
 
 %%
 
 void yyerror(const char *s) {
-    printf("Erro de sintaxe\n");
+    fprintf(stderr, "Erro de sintaxe na linha %d: %s\n", yylineno, s);
 }
 
 int main() {
-    if (yyparse() == 0) {
+    if (yyparse() == 0)
         printf("Sintaticamente correto\n");
-    }
     return 0;
 }

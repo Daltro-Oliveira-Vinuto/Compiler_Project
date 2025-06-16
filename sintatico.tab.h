@@ -56,16 +56,49 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     ID = 258,                      /* ID  */
     NUM = 259,                     /* NUM  */
-    PLUS = 260,                    /* PLUS  */
-    ASSIGN = 261,                  /* ASSIGN  */
-    PRINT = 262                    /* PRINT  */
+    IF = 260,                      /* IF  */
+    ELSE = 261,                    /* ELSE  */
+    INT = 262,                     /* INT  */
+    RETURN = 263,                  /* RETURN  */
+    VOID = 264,                    /* VOID  */
+    WHILE = 265,                   /* WHILE  */
+    ASSIGN = 266,                  /* ASSIGN  */
+    PLUS = 267,                    /* PLUS  */
+    MINUS = 268,                   /* MINUS  */
+    TIMES = 269,                   /* TIMES  */
+    OVER = 270,                    /* OVER  */
+    LT = 271,                      /* LT  */
+    LE = 272,                      /* LE  */
+    GT = 273,                      /* GT  */
+    GE = 274,                      /* GE  */
+    EQ = 275,                      /* EQ  */
+    NE = 276,                      /* NE  */
+    LOWER_THAN_ELSE = 277,         /* LOWER_THAN_ELSE  */
+    LPAREN = 278,                  /* LPAREN  */
+    RPAREN = 279,                  /* RPAREN  */
+    LBRACK = 280,                  /* LBRACK  */
+    RBRACK = 281,                  /* RBRACK  */
+    LBRACE = 282,                  /* LBRACE  */
+    RBRACE = 283,                  /* RBRACE  */
+    SEMI = 284,                    /* SEMI  */
+    COMMA = 285                    /* COMMA  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 18 "sintatico.y"
+
+    int num;
+    char* id;
+
+#line 99 "sintatico.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
