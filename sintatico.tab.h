@@ -42,64 +42,68 @@
      PRINT = 258,
      ID = 259,
      NUM = 260,
-     IF = 261,
-     ELSE = 262,
-     INT = 263,
-     RETURN = 264,
-     VOID = 265,
-     WHILE = 266,
-     ASSIGN = 267,
-     MINUS = 268,
-     PLUS = 269,
-     OVER = 270,
-     TIMES = 271,
-     NE = 272,
-     EQ = 273,
-     GE = 274,
-     GT = 275,
-     LE = 276,
-     LT = 277,
-     LOWER_THAN_ELSE = 278,
-     LPAREN = 279,
-     RPAREN = 280,
-     LBRACK = 281,
-     RBRACK = 282,
-     LBRACE = 283,
-     RBRACE = 284,
-     SEMI = 285,
-     COMMA = 286
+     FNUM = 261,
+     IF = 262,
+     ELSE = 263,
+     INT = 264,
+     FLOAT = 265,
+     RETURN = 266,
+     VOID = 267,
+     WHILE = 268,
+     ASSIGN = 269,
+     MINUS = 270,
+     PLUS = 271,
+     OVER = 272,
+     TIMES = 273,
+     NE = 274,
+     EQ = 275,
+     GE = 276,
+     GT = 277,
+     LE = 278,
+     LT = 279,
+     LOWER_THAN_ELSE = 280,
+     LPAREN = 281,
+     RPAREN = 282,
+     LBRACK = 283,
+     RBRACK = 284,
+     LBRACE = 285,
+     RBRACE = 286,
+     SEMI = 287,
+     COMMA = 288
    };
 #endif
 /* Tokens.  */
 #define PRINT 258
 #define ID 259
 #define NUM 260
-#define IF 261
-#define ELSE 262
-#define INT 263
-#define RETURN 264
-#define VOID 265
-#define WHILE 266
-#define ASSIGN 267
-#define MINUS 268
-#define PLUS 269
-#define OVER 270
-#define TIMES 271
-#define NE 272
-#define EQ 273
-#define GE 274
-#define GT 275
-#define LE 276
-#define LT 277
-#define LOWER_THAN_ELSE 278
-#define LPAREN 279
-#define RPAREN 280
-#define LBRACK 281
-#define RBRACK 282
-#define LBRACE 283
-#define RBRACE 284
-#define SEMI 285
-#define COMMA 286
+#define FNUM 261
+#define IF 262
+#define ELSE 263
+#define INT 264
+#define FLOAT 265
+#define RETURN 266
+#define VOID 267
+#define WHILE 268
+#define ASSIGN 269
+#define MINUS 270
+#define PLUS 271
+#define OVER 272
+#define TIMES 273
+#define NE 274
+#define EQ 275
+#define GE 276
+#define GT 277
+#define LE 278
+#define LT 279
+#define LOWER_THAN_ELSE 280
+#define LPAREN 281
+#define RPAREN 282
+#define LBRACK 283
+#define RBRACK 284
+#define LBRACE 285
+#define RBRACE 286
+#define SEMI 287
+#define COMMA 288
 
 
 
@@ -112,7 +116,7 @@ typedef union YYSTYPE
     int num;
 }
 /* Line 1529 of yacc.c.  */
-#line 116 "sintatico.tab.h"
+#line 120 "sintatico.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

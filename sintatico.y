@@ -80,8 +80,11 @@ void imprime_tabela() {
 
 %token <cadeia> ID
 %token <num> NUM
+%token <num> FNUM
 
-%token IF ELSE INT RETURN VOID WHILE
+%type <cadeia> type_specifier
+
+%token IF ELSE INT FLOAT RETURN VOID WHILE
 
 %right ASSIGN
 %left PLUS MINUS
@@ -114,18 +117,19 @@ declaration:
 
 var_declaration:
     type_specifier ID SEMI {
-        insere($2, "variavel");
-        printf("Declaracao de identificador (variavel): %s na linha %d\n", $2, yylineno);
+        insere($2, $1);
+        printf("Declaracao de identificador (variavel): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
     | type_specifier ID LBRACK NUM RBRACK SEMI {
-        insere($2, "vetor");
-        printf("Declaracao de identificador (vetor): %s na linha %d\n", $2, yylineno);
+        insere($2, $1);
+        printf("Declaracao de identificador (vetor): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
     ;
 
 type_specifier:
-    INT
-    | VOID
+    INT  { $$ = "int"; }
+    | VOID { $$ = "void"; }
+    | FLOAT { $$ = "float"; }
     ;
 
 fun_declaration:
@@ -265,6 +269,7 @@ factor:
     | var
     | call
     | NUM
+    | FNUM
     | PLUS factor
     | MINUS factor
     ;
@@ -293,6 +298,7 @@ arg_list:
     ;
 
 %%
+
 
 void yyerror(const char *s) {
     fprintf(stderr, "Erro de sintaxe na linha %d: %s\n", yylineno, s);

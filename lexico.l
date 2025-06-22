@@ -19,6 +19,7 @@
 "void"              { return VOID; }
 "return"            { return RETURN; }
 "while"             { return WHILE; }
+"float"             { return FLOAT; }
 
 "="                 { return ASSIGN; }
 "+"                 { return PLUS; }
@@ -50,6 +51,11 @@
 [0-9]+              {
     yylval.num = atoi(yytext);
     return NUM;
+}
+
+[0-9]+\.[0-9]+([eE][-+]?[0-9]+)?    {
+    yylval.num = atof(yytext);
+    return FNUM;
 }
 
 "//".*                     ;  // Comentário de linha
