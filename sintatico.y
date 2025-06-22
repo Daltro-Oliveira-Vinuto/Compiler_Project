@@ -52,6 +52,23 @@ void verifica_warnings() {
     }
 }
 
+void imprime_tabela() {
+    printf("\n____________________________________________\n");
+    printf("\n\t\tTABELA DE SIMBOLOS:\t\t\n");
+    printf("\n____________________________________________\n");
+    printf("%-20s %-15s %-5s\n", "NOME", "TIPO", "USADA");
+
+    Simbolo* atual = tabela;
+    while (atual != NULL) {
+        printf("%-20s %-15s %-5s\n",
+               atual->nome,
+               atual->tipo,
+               atual->usada ? "sim" : "nao");
+        atual = atual->prox;
+    }
+    printf("____________________________________________\n \n");
+}
+
 %}
 
 %union {
@@ -284,7 +301,7 @@ void yyerror(const char *s) {
 int main() {
     if (yyparse() == 0) {
         printf("Sintaticamente correto\n");
-
+        imprime_tabela();
         verifica_warnings();
 
         if (erros_semanticos == 0) {

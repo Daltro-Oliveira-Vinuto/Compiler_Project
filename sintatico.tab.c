@@ -187,6 +187,23 @@ void verifica_warnings() {
     }
 }
 
+void imprime_tabela() {
+    printf("\n____________________________________________\n");
+    printf("\n\t\tTABELA DE SIMBOLOS:\t\t\n");
+    printf("\n____________________________________________\n");
+    printf("%-20s %-15s %-5s\n", "NOME", "TIPO", "USADA");
+
+    Simbolo* atual = tabela;
+    while (atual != NULL) {
+        printf("%-20s %-15s %-5s\n",
+               atual->nome,
+               atual->tipo,
+               atual->usada ? "sim" : "nao");
+        atual = atual->prox;
+    }
+    printf("____________________________________________\n \n");
+}
+
 
 
 /* Enabling traces.  */
@@ -209,13 +226,13 @@ void verifica_warnings() {
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 57 "sintatico.y"
+#line 74 "sintatico.y"
 {
     char* cadeia;
     int num;
 }
 /* Line 193 of yacc.c.  */
-#line 219 "sintatico.tab.c"
+#line 236 "sintatico.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -228,7 +245,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 232 "sintatico.tab.c"
+#line 249 "sintatico.tab.c"
 
 #ifdef short
 # undef short
@@ -537,13 +554,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    85,    85,    89,    90,    94,    95,    99,   103,   110,
-     111,   115,   122,   123,   124,   128,   129,   133,   137,   144,
-     148,   149,   153,   154,   158,   159,   160,   161,   162,   163,
-     167,   168,   172,   176,   177,   181,   185,   186,   190,   193,
-     197,   207,   220,   221,   225,   225,   225,   225,   225,   225,
-     229,   230,   234,   234,   238,   239,   243,   243,   247,   248,
-     249,   250,   251,   252,   256,   269,   270,   274,   275
+       0,   102,   102,   106,   107,   111,   112,   116,   120,   127,
+     128,   132,   139,   140,   141,   145,   146,   150,   154,   161,
+     165,   166,   170,   171,   175,   176,   177,   178,   179,   180,
+     184,   185,   189,   193,   194,   198,   202,   203,   207,   210,
+     214,   224,   237,   238,   242,   242,   242,   242,   242,   242,
+     246,   247,   251,   251,   255,   256,   260,   260,   264,   265,
+     266,   267,   268,   269,   273,   286,   287,   291,   292
 };
 #endif
 
@@ -1525,7 +1542,7 @@ yyreduce:
   switch (yyn)
     {
         case 7:
-#line 99 "sintatico.y"
+#line 116 "sintatico.y"
     {
         insere((yyvsp[(2) - (3)].cadeia), "variavel");
         printf("Declaracao de identificador (variavel): %s na linha %d\n", (yyvsp[(2) - (3)].cadeia), yylineno);
@@ -1533,7 +1550,7 @@ yyreduce:
     break;
 
   case 8:
-#line 103 "sintatico.y"
+#line 120 "sintatico.y"
     {
         insere((yyvsp[(2) - (6)].cadeia), "vetor");
         printf("Declaracao de identificador (vetor): %s na linha %d\n", (yyvsp[(2) - (6)].cadeia), yylineno);
@@ -1541,7 +1558,7 @@ yyreduce:
     break;
 
   case 11:
-#line 115 "sintatico.y"
+#line 132 "sintatico.y"
     {
         insere((yyvsp[(2) - (6)].cadeia), "funcao");
         printf("Declaracao de identificador (funcao): %s na linha %d\n", (yyvsp[(2) - (6)].cadeia), yylineno);
@@ -1549,12 +1566,12 @@ yyreduce:
     break;
 
   case 14:
-#line 124 "sintatico.y"
+#line 141 "sintatico.y"
     {;}
     break;
 
   case 17:
-#line 133 "sintatico.y"
+#line 150 "sintatico.y"
     {
         insere((yyvsp[(2) - (2)].cadeia), "parametro");
         printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", (yyvsp[(2) - (2)].cadeia), yylineno);
@@ -1562,7 +1579,7 @@ yyreduce:
     break;
 
   case 18:
-#line 137 "sintatico.y"
+#line 154 "sintatico.y"
     {
         insere((yyvsp[(2) - (4)].cadeia), "parametro_vetor");
         printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", (yyvsp[(2) - (4)].cadeia), yylineno);
@@ -1570,24 +1587,24 @@ yyreduce:
     break;
 
   case 21:
-#line 149 "sintatico.y"
+#line 166 "sintatico.y"
     {;}
     break;
 
   case 23:
-#line 154 "sintatico.y"
+#line 171 "sintatico.y"
     {;}
     break;
 
   case 38:
-#line 190 "sintatico.y"
+#line 207 "sintatico.y"
     {
         printf("Atribuicao a identificador na linha %d\n", yylineno);
     ;}
     break;
 
   case 40:
-#line 197 "sintatico.y"
+#line 214 "sintatico.y"
     {
         Simbolo* s = busca((yyvsp[(1) - (1)].cadeia));
         if (s == NULL) {
@@ -1601,7 +1618,7 @@ yyreduce:
     break;
 
   case 41:
-#line 207 "sintatico.y"
+#line 224 "sintatico.y"
     {
         Simbolo* s = busca((yyvsp[(1) - (4)].cadeia));
         if (s == NULL) {
@@ -1615,7 +1632,7 @@ yyreduce:
     break;
 
   case 64:
-#line 256 "sintatico.y"
+#line 273 "sintatico.y"
     {
         Simbolo* s = busca((yyvsp[(1) - (4)].cadeia));
         if (s == NULL) {
@@ -1629,13 +1646,13 @@ yyreduce:
     break;
 
   case 66:
-#line 270 "sintatico.y"
+#line 287 "sintatico.y"
     {;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1639 "sintatico.tab.c"
+#line 1656 "sintatico.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1849,7 +1866,7 @@ yyreturn:
 }
 
 
-#line 278 "sintatico.y"
+#line 295 "sintatico.y"
 
 
 void yyerror(const char *s) {
@@ -1859,7 +1876,7 @@ void yyerror(const char *s) {
 int main() {
     if (yyparse() == 0) {
         printf("Sintaticamente correto\n");
-
+        imprime_tabela();
         verifica_warnings();
 
         if (erros_semanticos == 0) {
