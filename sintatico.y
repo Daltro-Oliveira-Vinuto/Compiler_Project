@@ -10,13 +10,13 @@ extern int yylineno;
 %}
 
 %union {
+    char* cadeia;
     int num;
-    char* id;
 }
 
 %token PRINT
 
-%token <id> ID
+%token <cadeia> ID
 %token <num> NUM
 
 %token IF ELSE INT RETURN VOID WHILE

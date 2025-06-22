@@ -383,12 +383,12 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[67] =
     {   0,
         0,    0,   34,   32,    1,    1,   32,   22,   23,   12,
-       10,   21,   11,   13,   28,   20,   15,    9,   17,   29,
-       24,   25,   29,   29,   29,   29,   29,   29,   26,   27,
-        1,   19,    0,   30,   28,   14,   18,   16,   29,   29,
-        3,   29,   29,   29,   29,   29,    0,    0,   30,   29,
-        5,   29,   29,   29,   29,   31,    4,   29,   29,    6,
-       29,    2,   29,    8,    7,    0
+       10,   21,   11,   13,   29,   20,   15,    9,   17,   28,
+       24,   25,   28,   28,   28,   28,   28,   28,   26,   27,
+        1,   19,    0,   30,   29,   14,   18,   16,   28,   28,
+        3,   28,   28,   28,   28,   28,    0,    0,   30,   28,
+        5,   28,   28,   28,   28,   31,    4,   28,   28,    6,
+       28,    2,   28,    8,    7,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -940,35 +940,41 @@ YY_RULE_SETUP
 case 28:
 YY_RULE_SETUP
 #line 45 "lexico.l"
-{ yylval.num = atoi(yytext); return NUM; }
+{
+    yylval.cadeia = strdup(yytext);
+    return ID;
+}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 46 "lexico.l"
-{ yylval.id = strdup(yytext); return ID; }
+#line 50 "lexico.l"
+{
+    yylval.num = atoi(yytext);
+    return NUM;
+}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 48 "lexico.l"
+#line 55 "lexico.l"
 ;  // Comentário de linha
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 49 "lexico.l"
+#line 56 "lexico.l"
 ;  // Comentário de bloco
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 51 "lexico.l"
+#line 58 "lexico.l"
 { return yytext[0]; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 53 "lexico.l"
+#line 60 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 971 "lex.yy.c"
+#line 977 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1985,7 +1991,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 53 "lexico.l"
+#line 60 "lexico.l"
 
 
 int yywrap() {

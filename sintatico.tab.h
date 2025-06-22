@@ -108,8 +108,8 @@
 typedef union YYSTYPE
 #line 12 "sintatico.y"
 {
+    char* cadeia;
     int num;
-    char* id;
 }
 /* Line 1529 of yacc.c.  */
 #line 116 "sintatico.tab.h"

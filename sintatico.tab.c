@@ -166,8 +166,8 @@ extern int yylineno;
 typedef union YYSTYPE
 #line 12 "sintatico.y"
 {
+    char* cadeia;
     int num;
-    char* id;
 }
 /* Line 193 of yacc.c.  */
 #line 174 "sintatico.tab.c"
@@ -1482,21 +1482,21 @@ yyreduce:
         case 7:
 #line 53 "sintatico.y"
     {
-        printf("Declaracao de identificador (variavel): %s na linha %d\n", (yyvsp[(2) - (3)].id), yylineno);
+        printf("Declaracao de identificador (variavel): %s na linha %d\n", (yyvsp[(2) - (3)].cadeia), yylineno);
     ;}
     break;
 
   case 8:
 #line 56 "sintatico.y"
     {
-        printf("Declaracao de identificador (vetor): %s na linha %d\n", (yyvsp[(2) - (6)].id), yylineno);
+        printf("Declaracao de identificador (vetor): %s na linha %d\n", (yyvsp[(2) - (6)].cadeia), yylineno);
     ;}
     break;
 
   case 11:
 #line 67 "sintatico.y"
     {
-        printf("Declaracao de identificador (funcao): %s na linha %d\n", (yyvsp[(2) - (6)].id), yylineno);
+        printf("Declaracao de identificador (funcao): %s na linha %d\n", (yyvsp[(2) - (6)].cadeia), yylineno);
     ;}
     break;
 
@@ -1508,14 +1508,14 @@ yyreduce:
   case 17:
 #line 84 "sintatico.y"
     {
-        printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", (yyvsp[(2) - (2)].id), yylineno);
+        printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", (yyvsp[(2) - (2)].cadeia), yylineno);
     ;}
     break;
 
   case 18:
 #line 87 "sintatico.y"
     {
-        printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", (yyvsp[(2) - (4)].id), yylineno);
+        printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", (yyvsp[(2) - (4)].cadeia), yylineno);
     ;}
     break;
 
@@ -1539,21 +1539,21 @@ yyreduce:
   case 40:
 #line 146 "sintatico.y"
     {
-        printf("Uso de identificador (variavel): %s na linha %d\n", (yyvsp[(1) - (1)].id), yylineno);
+        printf("Uso de identificador (variavel): %s na linha %d\n", (yyvsp[(1) - (1)].cadeia), yylineno);
     ;}
     break;
 
   case 41:
 #line 149 "sintatico.y"
     {
-        printf("Uso de identificador (vetor): %s na linha %d\n", (yyvsp[(1) - (4)].id), yylineno);
+        printf("Uso de identificador (vetor): %s na linha %d\n", (yyvsp[(1) - (4)].cadeia), yylineno);
     ;}
     break;
 
   case 64:
 #line 191 "sintatico.y"
     {
-        printf("Uso de identificador (chamada de funcao): %s na linha %d\n", (yyvsp[(1) - (4)].id), yylineno);
+        printf("Uso de identificador (chamada de funcao): %s na linha %d\n", (yyvsp[(1) - (4)].cadeia), yylineno);
     ;}
     break;
 

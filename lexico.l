@@ -42,8 +42,15 @@
 "{"                 { return LBRACE; }
 "}"                 { return RBRACE; }
 
-[0-9]+              { yylval.num = atoi(yytext); return NUM; }
-[a-zA-Z_][a-zA-Z0-9_]* { yylval.id = strdup(yytext); return ID; }
+[a-zA-Z_][a-zA-Z0-9_]* {
+    yylval.cadeia = strdup(yytext);
+    return ID;
+}
+
+[0-9]+              {
+    yylval.num = atoi(yytext);
+    return NUM;
+}
 
 "//".*                     ;  // Comentário de linha
 "/*"([^*]|\*+[^*/])*"*"+"/"   ;  // Comentário de bloco
