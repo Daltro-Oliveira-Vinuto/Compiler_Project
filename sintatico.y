@@ -56,7 +56,7 @@ void imprime_tabela() {
     printf("\n____________________________________________\n");
     printf("\n\t\tTABELA DE SIMBOLOS:\t\t\n");
     printf("\n____________________________________________\n");
-    printf("%-20s %-15s %-5s\n", "NOME", "TIPO", "USADA");
+    printf("%-20s %-15s %-5s\n", "NOME", "TIPO", "USADA \n");
 
     Simbolo* atual = tabela;
     while (atual != NULL) {
