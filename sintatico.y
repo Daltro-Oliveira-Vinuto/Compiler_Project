@@ -7,6 +7,51 @@ int yylex();
 void yyerror(const char *s);
 extern int yylineno;
 
+typedef struct Simbolo {
+    char* nome;
+    char* tipo; 
+    int usada;  
+    struct Simbolo* prox;
+} Simbolo;
+
+Simbolo* tabela = NULL;
+int erros_semanticos = 0;
+int warnings_semanticos = 0;
+
+Simbolo* busca(char* nome) {
+    Simbolo* atual = tabela;
+    while (atual != NULL) {
+        if (strcmp(atual->nome, nome) == 0) {
+            return atual;
+        }
+        atual = atual->prox;
+    }
+    return NULL;
+}
+
+void insere(char* nome, char* tipo) {
+    if (busca(nome) != NULL) {
+        return;
+    }
+    Simbolo* novo = malloc(sizeof(Simbolo));
+    novo->nome = strdup(nome);
+    novo->tipo = strdup(tipo);
+    novo->usada = 0;
+    novo->prox = tabela;
+    tabela = novo;
+}
+
+void verifica_warnings() {
+    Simbolo* atual = tabela;
+    while (atual != NULL) {
+        if (atual->usada == 0 && strcmp(atual->nome, "main") != 0) {
+            printf("WARNING: identificador %s (%s) declarado mas nao usado\n", atual->nome, atual->tipo);
+            warnings_semanticos++;
+        }
+        atual = atual->prox;
+    }
+}
+
 %}
 
 %union {
@@ -31,6 +76,7 @@ extern int yylineno;
 %token LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
 %token SEMI COMMA
 
+
 %start program
 
 %%
@@ -51,9 +97,11 @@ declaration:
 
 var_declaration:
     type_specifier ID SEMI {
+        insere($2, "variavel");
         printf("Declaracao de identificador (variavel): %s na linha %d\n", $2, yylineno);
     }
     | type_specifier ID LBRACK NUM RBRACK SEMI {
+        insere($2, "vetor");
         printf("Declaracao de identificador (vetor): %s na linha %d\n", $2, yylineno);
     }
     ;
@@ -65,6 +113,7 @@ type_specifier:
 
 fun_declaration:
     type_specifier ID LPAREN params RPAREN compound_stmt {
+        insere($2, "funcao");
         printf("Declaracao de identificador (funcao): %s na linha %d\n", $2, yylineno);
     }
     ;
@@ -82,9 +131,11 @@ param_list:
 
 param:
     type_specifier ID {
+        insere($2, "parametro");
         printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", $2, yylineno);
     }
     | type_specifier ID LBRACK RBRACK {
+        insere($2, "parametro_vetor");
         printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", $2, yylineno);
     }
     ;
@@ -144,10 +195,24 @@ expression:
 
 var:
     ID {
-        printf("Uso de identificador (variavel): %s na linha %d\n", $1, yylineno);
+        Simbolo* s = busca($1);
+        if (s == NULL) {
+            printf("ERRO: identificador %s usado na linha %d mas nao declarado\n", $1, yylineno);
+            erros_semanticos++;
+        } else {
+            s->usada = 1;
+            printf("Uso de identificador (variavel): %s na linha %d\n", $1, yylineno);
+        }
     }
     | ID LBRACK expression RBRACK {
-        printf("Uso de identificador (vetor): %s na linha %d\n", $1, yylineno);
+        Simbolo* s = busca($1);
+        if (s == NULL) {
+            printf("ERRO: identificador %s usado como vetor na linha %d mas nao declarado\n", $1, yylineno);
+            erros_semanticos++;
+        } else {
+            s->usada = 1;
+            printf("Uso de identificador (vetor): %s na linha %d\n", $1, yylineno);
+        }
     }
     ;
 
@@ -189,7 +254,14 @@ factor:
 
 call:
     ID LPAREN args RPAREN {
-        printf("Uso de identificador (chamada de funcao): %s na linha %d\n", $1, yylineno);
+        Simbolo* s = busca($1);
+        if (s == NULL) {
+            printf("ERRO: chamada da funcao %s na linha %d mas nao declarada\n", $1, yylineno);
+            erros_semanticos++;
+        } else {
+            s->usada = 1;
+            printf("Uso de identificador (chamada de funcao): %s na linha %d\n", $1, yylineno);
+        }
     }
     ;
 
@@ -210,7 +282,22 @@ void yyerror(const char *s) {
 }
 
 int main() {
-    if (yyparse() == 0)
+    if (yyparse() == 0) {
         printf("Sintaticamente correto\n");
+
+        verifica_warnings();
+
+        if (erros_semanticos == 0) {
+            printf("Programa semanticamente correto");
+            if (warnings_semanticos > 0) {
+                printf(" com %d warning(s)\n", warnings_semanticos);
+            } else {
+                printf(".\n");
+            }
+        } else {
+            printf("Programa contem %d erro(s) semantico(s).\n", erros_semanticos);
+        }
+    }
+
     return 0;
 }
