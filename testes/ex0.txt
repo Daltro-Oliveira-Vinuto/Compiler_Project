@@ -1,0 +1,27 @@
+int x;                 // declaração de variável
+int v[5];              // declaração de vetor
+
+void foo(int a, int b[]) { // declaração de função com parâmetros escalar e vetor
+  int local1;               // declaração local de variável
+  int local2[10];           // declaração local de vetor
+
+  x = a + v[2];             // uso de identificadores em expressão e vetor
+  print(x);                 // uso de identificador em print
+
+  if (x < 10) {
+    local1 = x * 2;         // uso em expressão
+  } else {
+    local2[3] = x - 1;      // uso em vetor como lvalue
+  }
+
+  while (a != 0) {
+    a = a - 1;              // uso de identificador em laço
+  }
+
+  return x;                // uso de identificador no retorno
+}
+
+int main() {              // outra função
+  foo(5, v);              // chamada de função com identificadores como argumentos
+  return;                 // retorno vazio
+}

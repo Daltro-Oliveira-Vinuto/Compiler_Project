@@ -7,12 +7,6 @@ int yylex();
 void yyerror(const char *s);
 extern int yylineno;
 
-typedef struct {
-    int num;
-    char* id;
-} YYSTYPE;
-
-#define YYSTYPE_IS_DECLARED 1
 %}
 
 %union {
@@ -56,8 +50,12 @@ declaration:
     ;
 
 var_declaration:
-    type_specifier ID SEMI
-    | type_specifier ID LBRACK NUM RBRACK SEMI
+    type_specifier ID SEMI {
+        printf("Declaracao de identificador (variavel): %s na linha %d\n", $2, yylineno);
+    }
+    | type_specifier ID LBRACK NUM RBRACK SEMI {
+        printf("Declaracao de identificador (vetor): %s na linha %d\n", $2, yylineno);
+    }
     ;
 
 type_specifier:
@@ -66,7 +64,9 @@ type_specifier:
     ;
 
 fun_declaration:
-    type_specifier ID LPAREN params RPAREN compound_stmt
+    type_specifier ID LPAREN params RPAREN compound_stmt {
+        printf("Declaracao de identificador (funcao): %s na linha %d\n", $2, yylineno);
+    }
     ;
 
 params:
@@ -81,8 +81,12 @@ param_list:
     ;
 
 param:
-    type_specifier ID
-    | type_specifier ID LBRACK RBRACK
+    type_specifier ID {
+        printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", $2, yylineno);
+    }
+    | type_specifier ID LBRACK RBRACK {
+        printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", $2, yylineno);
+    }
     ;
 
 compound_stmt:
@@ -132,13 +136,19 @@ return_stmt:
     ;
 
 expression:
-    var ASSIGN expression
+    var ASSIGN expression {
+        printf("Atribuicao a identificador na linha %d\n", yylineno);
+    }
     | simple_expression
     ;
 
 var:
-    ID
-    | ID LBRACK expression RBRACK
+    ID {
+        printf("Uso de identificador (variavel): %s na linha %d\n", $1, yylineno);
+    }
+    | ID LBRACK expression RBRACK {
+        printf("Uso de identificador (vetor): %s na linha %d\n", $1, yylineno);
+    }
     ;
 
 simple_expression:
@@ -178,7 +188,9 @@ factor:
     ;
 
 call:
-    ID LPAREN args RPAREN
+    ID LPAREN args RPAREN {
+        printf("Uso de identificador (chamada de funcao): %s na linha %d\n", $1, yylineno);
+    }
     ;
 
 args:
