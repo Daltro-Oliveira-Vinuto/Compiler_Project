@@ -86,6 +86,7 @@ void imprime_tabela() {
 %token <num> FNUM
 
 %type <cadeia> type_specifier
+%type <cadeia> expression simple_expression additive_expression term factor var
 
 %token IF ELSE INT FLOAT RETURN VOID WHILE
 
@@ -212,9 +213,25 @@ return_stmt:
 
 expression:
     var ASSIGN expression {
+        Simbolo* s = busca($1);
+        char* tipo_var = s ? s->tipo : NULL;
+        char* tipo_expr = $3;
+
         printf("Atribuicao a identificador na linha %d\n", yylineno);
+
+        if (tipo_var && tipo_expr) {
+            if (strcmp(tipo_var, "int") == 0 && strcmp(tipo_expr, "float") == 0) {
+                printf("ERRO SEMANTICO: atribuicao de float para int na linha %d\n", yylineno);
+                erros_semanticos++;
+            }
+            if (strcmp(tipo_var, "float") == 0 && strcmp(tipo_expr, "int") == 0) {
+                printf("WARNING: atribuicao de int para float na linha %d (conversao implicita)\n", yylineno);
+                warnings_semanticos++;
+            }
+        }
+        $$ = tipo_var;
     }
-    | simple_expression
+    | simple_expression { $$ = $1; }
     ;
 
 var:
@@ -223,9 +240,11 @@ var:
         if (s == NULL) {
             printf("ERRO: identificador %s usado na linha %d mas nao declarado\n", $1, yylineno);
             erros_semanticos++;
+            $$ = NULL;
         } else {
             s->usada = 1;
             printf("Uso de identificador (variavel): %s na linha %d\n", $1, yylineno);
+            $$ = s->nome; // Retorna o nome para ser usado na busca
         }
     }
     | ID LBRACK expression RBRACK {
@@ -233,16 +252,18 @@ var:
         if (s == NULL) {
             printf("ERRO: identificador %s usado como vetor na linha %d mas nao declarado\n", $1, yylineno);
             erros_semanticos++;
+            $$ = NULL;
         } else {
             s->usada = 1;
             printf("Uso de identificador (vetor): %s na linha %d\n", $1, yylineno);
+            $$ = s->nome;
         }
     }
     ;
 
 simple_expression:
-    additive_expression relop additive_expression
-    | additive_expression
+    additive_expression relop additive_expression { $$ = "int"; }
+    | additive_expression { $$ = $1; }
     ;
 
 relop:
@@ -250,8 +271,13 @@ relop:
     ;
 
 additive_expression:
-    additive_expression addop term
-    | term
+    additive_expression addop term {
+        if ($1 && $3 && (strcmp($1, "float") == 0 || strcmp($3, "float") == 0))
+            $$ = "float";
+        else
+            $$ = "int";
+    }
+    | term { $$ = $1; }
     ;
 
 addop:
@@ -259,8 +285,13 @@ addop:
     ;
 
 term:
-    term mulop factor
-    | factor
+    term mulop factor {
+        if ($1 && $3 && (strcmp($1, "float") == 0 || strcmp($3, "float") == 0))
+            $$ = "float";
+        else
+            $$ = "int";
+    }
+    | factor { $$ = $1; }
     ;
 
 mulop:
@@ -268,13 +299,17 @@ mulop:
     ;
 
 factor:
-    LPAREN expression RPAREN
-    | var
-    | call
-    | NUM
-    | FNUM
-    | PLUS factor
-    | MINUS factor
+    LPAREN expression RPAREN { $$ = $2; }
+    | var {
+        // Retorna o tipo da variável
+        Simbolo* s = busca($1);
+        $$ = s ? s->tipo : NULL;
+    }
+    | call { $$ = "int"; } // Supondo que funções retornam int
+    | NUM { $$ = "int"; }
+    | FNUM { $$ = "float"; }
+    | PLUS factor { $$ = $2; }
+    | MINUS factor { $$ = $2; }
     ;
 
 call:

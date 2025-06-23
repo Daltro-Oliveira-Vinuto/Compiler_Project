@@ -1,0 +1,11 @@
+int a;
+float b;
+int main(void) {
+    a = 10;      // ok
+    b = 2.5;     // ok
+    a = 3.14;    // ERRO SEMANTICO: atribuicao de float para int
+    b = 2;       // WARNING: atribuicao de int para float (conversao implicita)
+    a = b;       // ERRO SEMANTICO: atribuicao de float para int
+    b = a;       // WARNING: atribuicao de int para float (conversao implicita)
+    return;
+}
