@@ -56,8 +56,8 @@ void verifica_warnings() {
 
 void imprime_tabela() {
     printf("\n______________________________________________________________\n");
-    printf("\n\t\tTABELA DE SIMBOLOS:\t\t\n");
-    printf("\n______________________________________________________________\n");
+    printf("\n\t\t\tTABELA DE SIMBOLOS:\t\t\n");
+    printf("______________________________________________________________\n\n");
     printf("%-20s %-10s %-15s %-5s\n", "NOME", "TIPO", "NATUREZA", "USADA");
 
     Simbolo* atual = tabela;
