@@ -12,12 +12,20 @@ typedef struct Simbolo {
     char* tipo;     
     char* natureza;
     int usada;
+    char** tipos_param; 
+    int qtd_param;     
     struct Simbolo* prox;
 } Simbolo;
 
 Simbolo* tabela = NULL;
 int erros_semanticos = 0;
 int warnings_semanticos = 0;
+
+char* tipos_param_tmp[32];
+int qtd_param_tmp = 0;
+
+char* tipos_args_tmp[32];
+int qtd_args_tmp = 0;
 
 Simbolo* busca(char* nome) {
     Simbolo* atual = tabela;
@@ -140,6 +148,14 @@ type_specifier:
 fun_declaration:
     type_specifier ID LPAREN params RPAREN compound_stmt {
         insere($2, $1, "funcao");
+        Simbolo* s = busca($2);
+        if (s) {
+            s->qtd_param = qtd_param_tmp;
+            s->tipos_param = malloc(sizeof(char*) * qtd_param_tmp);
+            for (int i = 0; i < qtd_param_tmp; i++)
+                s->tipos_param[i] = tipos_param_tmp[i];
+        }
+        qtd_param_tmp = 0; // Limpa para próxima função
         printf("Declaracao de identificador (funcao): %s na linha %d\n", $2, yylineno);
     }
     ;
@@ -158,10 +174,12 @@ param_list:
 param:
     type_specifier ID {
         insere($2, $1, "parametro");
+        tipos_param_tmp[qtd_param_tmp++] = $1; 
         printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", $2, yylineno);
     }
     | type_specifier ID LBRACK RBRACK {
         insere($2, $1, "parametro_vetor");
+        tipos_param_tmp[qtd_param_tmp++] = $1; 
         printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", $2, yylineno);
     }
     ;
@@ -306,7 +324,7 @@ factor:
         Simbolo* s = busca($1);
         $$ = s ? s->tipo : NULL;
     }
-    | call { $$ = $1; } // Propaga o tipo real retornado pela função
+    | call { $$ = $1; }
     | NUM { $$ = "int"; }
     | FNUM { $$ = "float"; }
     | PLUS factor { $$ = $2; }
@@ -322,8 +340,19 @@ call:
             $$ = NULL;
         } else {
             s->usada = 1;
-            printf("Uso de identificador (chamada de funcao): %s na linha %d\n", $1, yylineno);
-            $$ = s->tipo; // Retorna o tipo da função chamada
+            if (s->qtd_param != qtd_args_tmp) {
+                printf("ERRO SEMANTICO: funcao %s chamada com %d argumento(s), mas espera %d na linha %d\n", $1, qtd_args_tmp, s->qtd_param, yylineno);
+                erros_semanticos++;
+            } else {
+                for (int i = 0; i < s->qtd_param; i++) {
+                    if (strcmp(s->tipos_param[i], tipos_args_tmp[i]) != 0) {
+                        printf("ERRO SEMANTICO: tipo do argumento %d da funcao %s incorreto (esperado: %s, encontrado: %s) na linha %d\n",
+                            i+1, $1, s->tipos_param[i], tipos_args_tmp[i], yylineno);
+                        erros_semanticos++;
+                    }
+                }
+            }
+            $$ = s->tipo;
         }
     }
     ;
@@ -334,8 +363,13 @@ args:
     ;
 
 arg_list:
-    arg_list COMMA expression
-    | expression
+    arg_list COMMA expression {
+        tipos_args_tmp[qtd_args_tmp++] = $3;
+    }
+    | expression {
+        qtd_args_tmp = 0;
+        tipos_args_tmp[qtd_args_tmp++] = $1;
+    }
     ;
 
 %%

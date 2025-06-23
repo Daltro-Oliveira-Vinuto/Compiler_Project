@@ -1,0 +1,13 @@
+int soma(int a, float b) {
+    return a + b;
+}
+
+int main(void) {
+    int x;
+    float y;
+    soma(x, y);      // ok
+    soma(y, x);      // ERRO: tipos invertidos
+    soma(x);         // ERRO: faltando argumento
+    soma(x, y, x);   // ERRO: argumento extra
+    return 0;
+}
