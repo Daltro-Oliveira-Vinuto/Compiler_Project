@@ -148,8 +148,9 @@ extern int yylineno;
 
 typedef struct Simbolo {
     char* nome;
-    char* tipo; 
-    int usada;  
+    char* tipo;     
+    char* natureza;
+    int usada;
     struct Simbolo* prox;
 } Simbolo;
 
@@ -168,13 +169,14 @@ Simbolo* busca(char* nome) {
     return NULL;
 }
 
-void insere(char* nome, char* tipo) {
+void insere(char* nome, char* tipo, char* natureza) {
     if (busca(nome) != NULL) {
         return;
     }
     Simbolo* novo = malloc(sizeof(Simbolo));
     novo->nome = strdup(nome);
     novo->tipo = strdup(tipo);
+    novo->natureza = strdup(natureza);
     novo->usada = 0;
     novo->prox = tabela;
     tabela = novo;
@@ -192,20 +194,21 @@ void verifica_warnings() {
 }
 
 void imprime_tabela() {
-    printf("\n____________________________________________\n");
+    printf("\n______________________________________________________________\n");
     printf("\n\t\tTABELA DE SIMBOLOS:\t\t\n");
-    printf("\n____________________________________________\n");
-    printf("%-20s %-15s %-5s\n", "NOME", "TIPO", "USADA \n");
+    printf("\n______________________________________________________________\n");
+    printf("%-20s %-10s %-15s %-5s\n", "NOME", "TIPO", "NATUREZA", "USADA");
 
     Simbolo* atual = tabela;
     while (atual != NULL) {
-        printf("%-20s %-15s %-5s\n",
+        printf("%-20s %-10s %-15s %-5s\n",
                atual->nome,
                atual->tipo,
+               atual->natureza,
                atual->usada ? "sim" : "nao");
         atual = atual->prox;
     }
-    printf("____________________________________________\n \n");
+    printf("______________________________________________________________\n \n");
 }
 
 
@@ -230,13 +233,13 @@ void imprime_tabela() {
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 74 "sintatico.y"
+#line 77 "sintatico.y"
 {
     char* cadeia;
     int num;
 }
 /* Line 193 of yacc.c.  */
-#line 240 "sintatico.tab.c"
+#line 243 "sintatico.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -249,7 +252,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 253 "sintatico.tab.c"
+#line 256 "sintatico.tab.c"
 
 #ifdef short
 # undef short
@@ -560,14 +563,14 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   105,   105,   109,   110,   114,   115,   119,   123,   130,
-     131,   132,   136,   143,   144,   145,   149,   150,   154,   158,
-     165,   169,   170,   174,   175,   179,   180,   181,   182,   183,
-     184,   188,   189,   193,   197,   198,   202,   206,   207,   211,
-     214,   218,   228,   241,   242,   246,   246,   246,   246,   246,
-     246,   250,   251,   255,   255,   259,   260,   264,   264,   268,
-     269,   270,   271,   272,   273,   274,   278,   291,   292,   296,
-     297
+       0,   108,   108,   112,   113,   117,   118,   122,   126,   133,
+     134,   135,   139,   146,   147,   148,   152,   153,   157,   161,
+     168,   172,   173,   177,   178,   182,   183,   184,   185,   186,
+     187,   191,   192,   196,   200,   201,   205,   209,   210,   214,
+     217,   221,   231,   244,   245,   249,   249,   249,   249,   249,
+     249,   253,   254,   258,   258,   262,   263,   267,   267,   271,
+     272,   273,   274,   275,   276,   277,   281,   294,   295,   299,
+     300
 };
 #endif
 
@@ -1553,84 +1556,84 @@ yyreduce:
   switch (yyn)
     {
         case 7:
-#line 119 "sintatico.y"
+#line 122 "sintatico.y"
     {
-        insere((yyvsp[(2) - (3)].cadeia), (yyvsp[(1) - (3)].cadeia));
+        insere((yyvsp[(2) - (3)].cadeia), (yyvsp[(1) - (3)].cadeia), "variavel");
         printf("Declaracao de identificador (variavel): %s do tipo %s na linha %d\n", (yyvsp[(2) - (3)].cadeia), (yyvsp[(1) - (3)].cadeia), yylineno);
     ;}
     break;
 
   case 8:
-#line 123 "sintatico.y"
+#line 126 "sintatico.y"
     {
-        insere((yyvsp[(2) - (6)].cadeia), (yyvsp[(1) - (6)].cadeia));
+        insere((yyvsp[(2) - (6)].cadeia), (yyvsp[(1) - (6)].cadeia), "vetor");
         printf("Declaracao de identificador (vetor): %s do tipo %s na linha %d\n", (yyvsp[(2) - (6)].cadeia), (yyvsp[(1) - (6)].cadeia), yylineno);
     ;}
     break;
 
   case 9:
-#line 130 "sintatico.y"
+#line 133 "sintatico.y"
     { (yyval.cadeia) = "int"; ;}
     break;
 
   case 10:
-#line 131 "sintatico.y"
+#line 134 "sintatico.y"
     { (yyval.cadeia) = "void"; ;}
     break;
 
   case 11:
-#line 132 "sintatico.y"
+#line 135 "sintatico.y"
     { (yyval.cadeia) = "float"; ;}
     break;
 
   case 12:
-#line 136 "sintatico.y"
+#line 139 "sintatico.y"
     {
-        insere((yyvsp[(2) - (6)].cadeia), "funcao");
+        insere((yyvsp[(2) - (6)].cadeia), (yyvsp[(1) - (6)].cadeia), "funcao");
         printf("Declaracao de identificador (funcao): %s na linha %d\n", (yyvsp[(2) - (6)].cadeia), yylineno);
     ;}
     break;
 
   case 15:
-#line 145 "sintatico.y"
+#line 148 "sintatico.y"
     {;}
     break;
 
   case 18:
-#line 154 "sintatico.y"
+#line 157 "sintatico.y"
     {
-        insere((yyvsp[(2) - (2)].cadeia), "parametro");
+        insere((yyvsp[(2) - (2)].cadeia), (yyvsp[(1) - (2)].cadeia), "parametro");
         printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", (yyvsp[(2) - (2)].cadeia), yylineno);
     ;}
     break;
 
   case 19:
-#line 158 "sintatico.y"
+#line 161 "sintatico.y"
     {
-        insere((yyvsp[(2) - (4)].cadeia), "parametro_vetor");
+        insere((yyvsp[(2) - (4)].cadeia), (yyvsp[(1) - (4)].cadeia), "parametro_vetor");
         printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", (yyvsp[(2) - (4)].cadeia), yylineno);
     ;}
     break;
 
   case 22:
-#line 170 "sintatico.y"
+#line 173 "sintatico.y"
     {;}
     break;
 
   case 24:
-#line 175 "sintatico.y"
+#line 178 "sintatico.y"
     {;}
     break;
 
   case 39:
-#line 211 "sintatico.y"
+#line 214 "sintatico.y"
     {
         printf("Atribuicao a identificador na linha %d\n", yylineno);
     ;}
     break;
 
   case 41:
-#line 218 "sintatico.y"
+#line 221 "sintatico.y"
     {
         Simbolo* s = busca((yyvsp[(1) - (1)].cadeia));
         if (s == NULL) {
@@ -1644,7 +1647,7 @@ yyreduce:
     break;
 
   case 42:
-#line 228 "sintatico.y"
+#line 231 "sintatico.y"
     {
         Simbolo* s = busca((yyvsp[(1) - (4)].cadeia));
         if (s == NULL) {
@@ -1658,7 +1661,7 @@ yyreduce:
     break;
 
   case 66:
-#line 278 "sintatico.y"
+#line 281 "sintatico.y"
     {
         Simbolo* s = busca((yyvsp[(1) - (4)].cadeia));
         if (s == NULL) {
@@ -1672,13 +1675,13 @@ yyreduce:
     break;
 
   case 68:
-#line 292 "sintatico.y"
+#line 295 "sintatico.y"
     {;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1682 "sintatico.tab.c"
+#line 1685 "sintatico.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1892,7 +1895,7 @@ yyreturn:
 }
 
 
-#line 300 "sintatico.y"
+#line 303 "sintatico.y"
 
 
 

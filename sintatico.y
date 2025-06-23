@@ -9,8 +9,9 @@ extern int yylineno;
 
 typedef struct Simbolo {
     char* nome;
-    char* tipo; 
-    int usada;  
+    char* tipo;     
+    char* natureza;
+    int usada;
     struct Simbolo* prox;
 } Simbolo;
 
@@ -29,13 +30,14 @@ Simbolo* busca(char* nome) {
     return NULL;
 }
 
-void insere(char* nome, char* tipo) {
+void insere(char* nome, char* tipo, char* natureza) {
     if (busca(nome) != NULL) {
         return;
     }
     Simbolo* novo = malloc(sizeof(Simbolo));
     novo->nome = strdup(nome);
     novo->tipo = strdup(tipo);
+    novo->natureza = strdup(natureza);
     novo->usada = 0;
     novo->prox = tabela;
     tabela = novo;
@@ -53,20 +55,21 @@ void verifica_warnings() {
 }
 
 void imprime_tabela() {
-    printf("\n____________________________________________\n");
+    printf("\n______________________________________________________________\n");
     printf("\n\t\tTABELA DE SIMBOLOS:\t\t\n");
-    printf("\n____________________________________________\n");
-    printf("%-20s %-15s %-5s\n", "NOME", "TIPO", "USADA \n");
+    printf("\n______________________________________________________________\n");
+    printf("%-20s %-10s %-15s %-5s\n", "NOME", "TIPO", "NATUREZA", "USADA");
 
     Simbolo* atual = tabela;
     while (atual != NULL) {
-        printf("%-20s %-15s %-5s\n",
+        printf("%-20s %-10s %-15s %-5s\n",
                atual->nome,
                atual->tipo,
+               atual->natureza,
                atual->usada ? "sim" : "nao");
         atual = atual->prox;
     }
-    printf("____________________________________________\n \n");
+    printf("______________________________________________________________\n \n");
 }
 
 %}
@@ -117,11 +120,11 @@ declaration:
 
 var_declaration:
     type_specifier ID SEMI {
-        insere($2, $1);
+        insere($2, $1, "variavel");
         printf("Declaracao de identificador (variavel): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
     | type_specifier ID LBRACK NUM RBRACK SEMI {
-        insere($2, $1);
+        insere($2, $1, "vetor");
         printf("Declaracao de identificador (vetor): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
     ;
@@ -134,7 +137,7 @@ type_specifier:
 
 fun_declaration:
     type_specifier ID LPAREN params RPAREN compound_stmt {
-        insere($2, "funcao");
+        insere($2, $1, "funcao");
         printf("Declaracao de identificador (funcao): %s na linha %d\n", $2, yylineno);
     }
     ;
@@ -152,11 +155,11 @@ param_list:
 
 param:
     type_specifier ID {
-        insere($2, "parametro");
+        insere($2, $1, "parametro");
         printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", $2, yylineno);
     }
     | type_specifier ID LBRACK RBRACK {
-        insere($2, "parametro_vetor");
+        insere($2, $1, "parametro_vetor");
         printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", $2, yylineno);
     }
     ;
