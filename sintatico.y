@@ -87,6 +87,7 @@ void imprime_tabela() {
 
 %type <cadeia> type_specifier
 %type <cadeia> expression simple_expression additive_expression term factor var
+%type <cadeia> call
 
 %token IF ELSE INT FLOAT RETURN VOID WHILE
 
@@ -305,7 +306,7 @@ factor:
         Simbolo* s = busca($1);
         $$ = s ? s->tipo : NULL;
     }
-    | call { $$ = "int"; } // Supondo que funções retornam int
+    | call { $$ = $1; } // Propaga o tipo real retornado pela função
     | NUM { $$ = "int"; }
     | FNUM { $$ = "float"; }
     | PLUS factor { $$ = $2; }
@@ -318,9 +319,11 @@ call:
         if (s == NULL) {
             printf("ERRO: chamada da funcao %s na linha %d mas nao declarada\n", $1, yylineno);
             erros_semanticos++;
+            $$ = NULL;
         } else {
             s->usada = 1;
             printf("Uso de identificador (chamada de funcao): %s na linha %d\n", $1, yylineno);
+            $$ = s->tipo; // Retorna o tipo da função chamada
         }
     }
     ;

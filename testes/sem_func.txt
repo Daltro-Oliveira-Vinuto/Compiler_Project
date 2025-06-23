@@ -1,0 +1,11 @@
+int x;
+float y;
+
+int f1() { return 1; }
+float f2() { return 2.5; }
+
+int main(void) {
+    x = f2(); // ERRO: f2 retorna float, x é int
+    y = f1(); // WARNING: f1 retorna int, y é float
+    return 0;
+}

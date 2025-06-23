@@ -1,5 +1,12 @@
 int a;
 float b;
+
+int x;
+float y;
+
+int f1() { return 1; }
+float f2() { return 2.5; }
+
 int main(void) {
     a = 10;      // ok
     b = 2.5;     // ok
@@ -7,5 +14,7 @@ int main(void) {
     b = 2;       // WARNING: atribuicao de int para float (conversao implicita)
     a = b;       // ERRO SEMANTICO: atribuicao de float para int
     b = a;       // WARNING: atribuicao de int para float (conversao implicita)
+    x = f2(); // ERRO: f2 retorna float, x é int
+    y = f1(); // WARNING: f1 retorna int, y é float
     return;
 }
