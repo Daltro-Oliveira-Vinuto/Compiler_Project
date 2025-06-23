@@ -1,0 +1,8 @@
+int a;
+float b;
+
+void funcao() {
+    a = 1;
+    b = 2.0;
+    return;
+}

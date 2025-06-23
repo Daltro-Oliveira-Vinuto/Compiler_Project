@@ -348,6 +348,11 @@ int main() {
         imprime_tabela();
         verifica_warnings();
 
+        if (busca("main") == NULL) {
+            printf("ERRO SEMANTICO: funcao 'main' nao declarada\n");
+            erros_semanticos++;
+        }
+
         if (erros_semanticos == 0) {
             printf("Programa semanticamente correto");
             if (warnings_semanticos > 0) {
