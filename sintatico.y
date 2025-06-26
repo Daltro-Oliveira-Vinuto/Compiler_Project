@@ -232,8 +232,7 @@ return_stmt:
 
 expression:
     var ASSIGN expression {
-        Simbolo* s = busca($1);
-        char* tipo_var = s ? s->tipo : NULL;
+        char* tipo_var = $1;
         char* tipo_expr = $3;
 
         printf("Atribuicao a identificador na linha %d\n", yylineno);
@@ -254,6 +253,7 @@ expression:
     ;
 
 var:
+var:
     ID {
         Simbolo* s = busca($1);
         if (s == NULL) {
@@ -263,7 +263,7 @@ var:
         } else {
             s->usada = 1;
             printf("Uso de identificador (variavel): %s na linha %d\n", $1, yylineno);
-            $$ = s->nome; // Retorna o nome para ser usado na busca
+            $$ = strdup(s->tipo); // Retorna o tipo para ser usado nas verificações
         }
     }
     | ID LBRACK expression RBRACK {
@@ -275,11 +275,10 @@ var:
         } else {
             s->usada = 1;
             printf("Uso de identificador (vetor): %s na linha %d\n", $1, yylineno);
-            $$ = s->nome;
+            $$ = strdup(s->tipo);
         }
     }
     ;
-
 simple_expression:
     additive_expression relop additive_expression { $$ = "int"; }
     | additive_expression { $$ = $1; }
@@ -319,18 +318,13 @@ mulop:
 
 factor:
     LPAREN expression RPAREN { $$ = $2; }
-    | var {
-        // Retorna o tipo da variável
-        Simbolo* s = busca($1);
-        $$ = s ? s->tipo : NULL;
-    }
+    | var { $$ = $1; }
     | call { $$ = $1; }
     | NUM { $$ = "int"; }
     | FNUM { $$ = "float"; }
     | PLUS factor { $$ = $2; }
     | MINUS factor { $$ = $2; }
     ;
-
 call:
     ID LPAREN args RPAREN {
         Simbolo* s = busca($1);
