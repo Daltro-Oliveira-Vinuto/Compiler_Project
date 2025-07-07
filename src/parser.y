@@ -9,8 +9,12 @@ void emitRM( char *op, int r, int d, int s, char *c);
 
 static int emitLoc = 0;
 uint ac = 0;
-int gp = 5;
-int mp = 6;
+uint ac1 = 1;
+uint gp = 5;
+uint mp = 6;
+uint pc = 7;
+int variable_offset_global = 0;
+
 extern FILE *yyin;
 extern FILE *yyout;
 
@@ -24,11 +28,13 @@ typedef struct Simbolo {
     char* natureza;
     int usada;
     char** tipos_param; 
-    int qtd_param;     
+    int qtd_param;
+    int variable_offset;
     struct Simbolo* prox;
 } Simbolo;
 
 Simbolo* tabela = NULL;
+Simbolo* simbolo_atual = NULL;
 int erros_semanticos = 0;
 int warnings_semanticos = 0;
 
@@ -49,7 +55,7 @@ Simbolo* busca(char* nome) {
     return NULL;
 }
 
-void insere(char* nome, char* tipo, char* natureza) {
+void insere(char* nome, char* tipo, char* natureza, int offset) {
     if (busca(nome) != NULL) {
         return;
     }
@@ -58,7 +64,10 @@ void insere(char* nome, char* tipo, char* natureza) {
     novo->tipo = strdup(tipo);
     novo->natureza = strdup(natureza);
     novo->usada = 0;
+    novo->variable_offset = offset;
+
     novo->prox = tabela;
+
     tabela = novo;
 }
 
@@ -77,15 +86,16 @@ void imprime_tabela() {
     printf("\n______________________________________________________________\n");
     printf("\n\t\t\tTABELA DE SIMBOLOS:\t\t\n");
     printf("______________________________________________________________\n\n");
-    printf("%-20s %-10s %-15s %-5s\n", "NOME", "TIPO", "NATUREZA", "USADA");
+    printf("%-20s %-10s %-15s %-5s %-20s\n", "NOME", "TIPO", "NATUREZA", "USADA", "MEMORY OFFSET");
 
     Simbolo* atual = tabela;
     while (atual != NULL) {
-        printf("%-20s %-10s %-15s %-5s\n",
+        printf("%-20s %-10s %-15s %-5s %-20d \n",
                atual->nome,
                atual->tipo,
                atual->natureza,
-               atual->usada ? "sim" : "nao");
+               atual->usada ? "sim" : "nao",
+               atual->variable_offset);
         atual = atual->prox;
     }
     printf("______________________________________________________________\n \n");
@@ -127,8 +137,7 @@ void imprime_tabela() {
 %%
 
 program:
-    declaration_list
-{        emitRO("HALT", 0, 0, 0, "End of execution.");
+    declaration_list { emitRO("HALT", 0, 0, 0, "End of execution.");
 }
 
     ;
@@ -145,12 +154,14 @@ declaration:
 
 var_declaration:
     type_specifier ID SEMICOLON {
-        insere($2, $1, "variavel");
-        //printf("Declaracao de identificador (variavel): %s do tipo %s na linha %d\n", $2, $1, yylineno);
+        insere($2, $1, "variavel", variable_offset_global);
+        variable_offset_global += 1;
+        // printf("Declaracao de identificador (variavel): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
     | type_specifier ID L_SQUARE_BRACKETS NUM R_SQUARE_BRACKETS SEMICOLON {
-        insere($2, $1, "vetor");
-        //printf("Declaracao de identificador (vetor): %s do tipo %s na linha %d\n", $2, $1, yylineno);
+        insere($2, $1, "vetor", variable_offset_global);
+        variable_offset_global += 1;
+        // printf("Declaracao de identificador (vetor): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
     ;
 
@@ -162,7 +173,8 @@ type_specifier:
 
 fun_declaration:
     type_specifier ID L_PARENTHESES params R_PARENTHESES compound_stmt {
-        insere($2, $1, "funcao");
+        insere($2, $1, "funcao", variable_offset_global);
+        variable_offset_global +=1;
         Simbolo* s = busca($2);
         if (s) {
             s->qtd_param = qtd_param_tmp;
@@ -187,12 +199,14 @@ param_list:
 
 param:
     type_specifier ID {
-        insere($2, $1, "parametro");
+        insere($2, $1, "parametro", variable_offset_global);
+        variable_offset_global += 1;
         tipos_param_tmp[qtd_param_tmp++] = $1; 
         printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", $2, yylineno);
     }
     | type_specifier ID L_SQUARE_BRACKETS R_SQUARE_BRACKETS {
-        insere($2, $1, "parametro_vetor");
+        insere($2, $1, "parametro_vetor", variable_offset_global);
+        variable_offset_global += 1;
         tipos_param_tmp[qtd_param_tmp++] = $1; 
         printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", $2, yylineno);
     }
@@ -227,7 +241,9 @@ expression_stmt:
     ;
 
 print_stmt:
-    PRINT L_PARENTHESES expression R_PARENTHESES SEMICOLON {emitRO("OUT", ac, 0, 0, "print expression result");
+    PRINT L_PARENTHESES expression R_PARENTHESES SEMICOLON {
+        //printf("========> expression is %s\n", $3);
+        emitRO("OUT", ac, 0, 0, "print expression result");
 }
     ;
 
@@ -250,7 +266,8 @@ expression:
         char* tipo_var = $1;
         char* tipo_expr = $3;
 
-
+        // s->variable_offset
+        emitRM("ST", ac, simbolo_atual->variable_offset , gp, "; store the value of ac in offset(gp)");
         //printf("Atribuicao a identificador na linha %d\n", yylineno);
 
         if (tipo_var && tipo_expr) {
@@ -265,19 +282,25 @@ expression:
         }
         $$ = tipo_var;
     }
-    | simple_expression { $$ = $1; }
+    | simple_expression { $$ = $1; 
+                         //printf("=========> simple expression is %s\n", $1);
+                     }
     ;
 
 var:
 var:
     ID {
+        // printf("==========> variable ID : %s\n", $1);
+
         Simbolo* s = busca($1);
+        simbolo_atual = s;
         if (s == NULL) {
             printf("ERRO: identificador %s usado na linha %d mas nao declarado\n", $1, yylineno);
             erros_semanticos++;
             $$ = NULL;
         } else {
             s->usada = 1;
+
             //printf("Uso de identificador (variavel): %s na linha %d\n", $1, yylineno);
             $$ = strdup(s->tipo); // Retorna o tipo para ser usado nas verificações
         }
@@ -296,11 +319,11 @@ var:
     }
     ;
 simple_expression:
-    additive_expression relop additive_expression { $$ = "int"; }
+    additive_expression relational_operation additive_expression { $$ = "int"; }
     | additive_expression { $$ = $1; }
     ;
 
-relop:
+relational_operation:
     SYMBOL_LE| SYMBOL_LT | SYMBOL_GT | SYMBOL_GE | SYMBOL_EQ | SYMBOL_NE
     ;
 
@@ -334,15 +357,20 @@ mulop:
 
 factor:
     L_PARENTHESES expression R_PARENTHESES { $$ = $2; }
-    | var { $$ = $1; }
+    | var { 
+        $$ = $1; 
+        // printf("======> var is %s\n", $1);
+        emitRM("LD", ac, simbolo_atual->variable_offset , gp, "load from offset(gp)");
+    }
     | call { $$ = $1; }
     | NUM { $$ = "int";   
-     emitRM("LDC", ac, $1, 0, "load constant into ac");
-}
+            emitRM("LDC", ac, $1, 0, "load constant into ac");
+    }
     | FLOATING_NUM { $$ = "float"; }
     | PLUS factor { $$ = $2; }
     | MINUS factor { $$ = $2; }
     ;
+
 call:
     ID L_PARENTHESES args R_PARENTHESES {
         Simbolo* s = busca($1);
@@ -391,20 +419,16 @@ void yyerror(const char *s) {
     fprintf(stderr, "Erro de sintaxe na linha %d: %s\n", yylineno, s);
 }
 
-void emitRO( char *op, int r, int s, int t, char *c)
-{
+void emitRO( char *op, int r, int s, int t, char *c) {
     fprintf(yyout, "%3d:  %5s  %d,%d,%d ", emitLoc++, op, r, s, t);
     //fprintf(yyout, "\t%s\n", c); // Add comment
     fprintf(yyout,"\n") ;
-
 } /* emitRO */
 
-void emitRM( char * op, int r, int d, int s, char *c)
-{
+void emitRM( char * op, int r, int d, int s, char *c) {
     fprintf(yyout, "%3d:  %5s  %d,%d(%d) ", emitLoc++, op, r, d, s);
     //fprintf(yyout, "\t%s\n", c); // Add comment
     fprintf(yyout,"\n") ;
-
 } /* emitRM */
 
 

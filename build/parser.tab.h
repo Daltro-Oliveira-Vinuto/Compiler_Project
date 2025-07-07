@@ -58,7 +58,7 @@ extern int yydebug;
     READ = 259,                    /* READ  */
     ID = 260,                      /* ID  */
     NUM = 261,                     /* NUM  */
-    FNUM = 262,                    /* FNUM  */
+    FLOATING_NUM = 262,            /* FLOATING_NUM  */
     IF = 263,                      /* IF  */
     ELSE = 264,                    /* ELSE  */
     INT = 265,                     /* INT  */
@@ -69,22 +69,22 @@ extern int yydebug;
     ASSIGN = 270,                  /* ASSIGN  */
     PLUS = 271,                    /* PLUS  */
     MINUS = 272,                   /* MINUS  */
-    TIMES = 273,                   /* TIMES  */
-    OVER = 274,                    /* OVER  */
-    LT = 275,                      /* LT  */
-    LE = 276,                      /* LE  */
-    GT = 277,                      /* GT  */
-    GE = 278,                      /* GE  */
-    EQ = 279,                      /* EQ  */
-    NE = 280,                      /* NE  */
+    MULTIPLICATION = 273,          /* MULTIPLICATION  */
+    DIVISION = 274,                /* DIVISION  */
+    SYMBOL_LT = 275,               /* SYMBOL_LT  */
+    SYMBOL_LE = 276,               /* SYMBOL_LE  */
+    SYMBOL_GT = 277,               /* SYMBOL_GT  */
+    SYMBOL_GE = 278,               /* SYMBOL_GE  */
+    SYMBOL_EQ = 279,               /* SYMBOL_EQ  */
+    SYMBOL_NE = 280,               /* SYMBOL_NE  */
     LOWER_THAN_ELSE = 281,         /* LOWER_THAN_ELSE  */
-    LPAREN = 282,                  /* LPAREN  */
-    RPAREN = 283,                  /* RPAREN  */
-    LBRACK = 284,                  /* LBRACK  */
-    RBRACK = 285,                  /* RBRACK  */
-    LBRACE = 286,                  /* LBRACE  */
-    RBRACE = 287,                  /* RBRACE  */
-    SEMI = 288,                    /* SEMI  */
+    L_PARENTHESES = 282,           /* L_PARENTHESES  */
+    R_PARENTHESES = 283,           /* R_PARENTHESES  */
+    L_SQUARE_BRACKETS = 284,       /* L_SQUARE_BRACKETS  */
+    R_SQUARE_BRACKETS = 285,       /* R_SQUARE_BRACKETS  */
+    L_BRACES = 286,                /* L_BRACES  */
+    R_BRACES = 287,                /* R_BRACES  */
+    SEMICOLON = 288,               /* SEMICOLON  */
     COMMA = 289                    /* COMMA  */
   };
   typedef enum yytokentype yytoken_kind_t;
@@ -94,7 +94,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 96 "../src/parser.y"
+#line 106 "../src/parser.y"
 
     char* cadeia;
     int num;

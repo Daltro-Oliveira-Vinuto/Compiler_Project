@@ -880,47 +880,47 @@ YY_RULE_SETUP
 case 14:
 YY_RULE_SETUP
 #line 28 "../src/scanner.l"
-{ return TIMES; }
+{ return MULTIPLICATION; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 29 "../src/scanner.l"
-{ return OVER; }
+{ return DIVISION; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 31 "../src/scanner.l"
-{ return LE; }
+{ return SYMBOL_LE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 32 "../src/scanner.l"
-{ return LT; }
+{ return SYMBOL_LT; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 33 "../src/scanner.l"
-{ return GE; }
+{ return SYMBOL_GE; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 34 "../src/scanner.l"
-{ return GT; }
+{ return SYMBOL_GT; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 35 "../src/scanner.l"
-{ return EQ; }
+{ return SYMBOL_EQ; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 36 "../src/scanner.l"
-{ return NE; }
+{ return SYMBOL_NE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 38 "../src/scanner.l"
-{ return SEMI; }
+{ return SEMICOLON; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
@@ -930,32 +930,32 @@ YY_RULE_SETUP
 case 24:
 YY_RULE_SETUP
 #line 40 "../src/scanner.l"
-{ return LPAREN; }
+{ return L_PARENTHESES; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 41 "../src/scanner.l"
-{ return RPAREN; }
+{ return R_PARENTHESES; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 42 "../src/scanner.l"
-{ return LBRACK; }
+{ return L_SQUARE_BRACKETS; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 43 "../src/scanner.l"
-{ return RBRACK; }
+{ return R_SQUARE_BRACKETS; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 44 "../src/scanner.l"
-{ return LBRACE; }
+{ return L_BRACES; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 45 "../src/scanner.l"
-{ return RBRACE; }
+{ return R_BRACES; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
@@ -978,7 +978,7 @@ YY_RULE_SETUP
 #line 57 "../src/scanner.l"
 {
     yylval.num = atof(yytext);
-    return FNUM;
+    return FLOATING_NUM;
 }
 	YY_BREAK
 case 33:
