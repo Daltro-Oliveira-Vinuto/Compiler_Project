@@ -25,24 +25,24 @@
 "="                 { return ASSIGN; }
 "+"                 { return PLUS; }
 "-"                 { return MINUS; }
-"*"                 { return TIMES; }
-"/"                 { return OVER; }
+"*"                 { return MULTIPLICATION; }
+"/"                 { return DIVISION; }
 
-"<="                { return LE; }
-"<"                 { return LT; }
-">="                { return GE; }
-">"                 { return GT; }
-"=="                { return EQ; }
-"!="                { return NE; }
+"<="                { return SYMBOL_LE; }
+"<"                 { return SYMBOL_LT; }
+">="                { return SYMBOL_GE; }
+">"                 { return SYMBOL_GT; }
+"=="                { return SYMBOL_EQ; }
+"!="                { return SYMBOL_NE; }
 
-";"                 { return SEMI; }
+";"                 { return SEMICOLON; }
 ","                 { return COMMA; }
-"("                 { return LPAREN; }
-")"                 { return RPAREN; }
-"["                 { return LBRACK; }
-"]"                 { return RBRACK; }
-"{"                 { return LBRACE; }
-"}"                 { return RBRACE; }
+"("                 { return L_PARENTHESES; }
+")"                 { return R_PARENTHESES; }
+"["                 { return L_SQUARE_BRACKETS; }
+"]"                 { return R_SQUARE_BRACKETS; }
+"{"                 { return L_BRACES; }
+"}"                 { return R_BRACES; }
 
 [a-zA-Z_][a-zA-Z0-9_]* {
     yylval.cadeia = strdup(yytext);
@@ -56,7 +56,7 @@
 
 [0-9]+\.[0-9]+([eE][-+]?[0-9]+)?    {
     yylval.num = atof(yytext);
-    return FNUM;
+    return FLOATING_NUM;
 }
 
 "//".*                     ;  // Comentário de linha

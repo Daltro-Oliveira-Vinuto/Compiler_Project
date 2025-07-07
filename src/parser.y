@@ -103,7 +103,7 @@ void imprime_tabela() {
 
 %token <cadeia> ID
 %token <num> NUM
-%token <num> FNUM
+%token <num> FLOATING_NUM
 
 %type <cadeia> type_specifier
 %type <cadeia> expression simple_expression additive_expression term factor var
@@ -113,13 +113,13 @@ void imprime_tabela() {
 
 %right ASSIGN
 %left PLUS MINUS
-%left TIMES OVER
-%nonassoc LT LE GT GE EQ NE
+%left MULTIPLICATION DIVISION
+%nonassoc SYMBOL_LT SYMBOL_LE SYMBOL_GT SYMBOL_GE SYMBOL_EQ SYMBOL_NE
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
 
-%token LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
-%token SEMI COMMA
+%token L_PARENTHESES R_PARENTHESES L_SQUARE_BRACKETS R_SQUARE_BRACKETS L_BRACES R_BRACES
+%token SEMICOLON COMMA
 
 
 %start program
@@ -144,11 +144,11 @@ declaration:
     ;
 
 var_declaration:
-    type_specifier ID SEMI {
+    type_specifier ID SEMICOLON {
         insere($2, $1, "variavel");
         //printf("Declaracao de identificador (variavel): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
-    | type_specifier ID LBRACK NUM RBRACK SEMI {
+    | type_specifier ID L_SQUARE_BRACKETS NUM R_SQUARE_BRACKETS SEMICOLON {
         insere($2, $1, "vetor");
         //printf("Declaracao de identificador (vetor): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
@@ -161,7 +161,7 @@ type_specifier:
     ;
 
 fun_declaration:
-    type_specifier ID LPAREN params RPAREN compound_stmt {
+    type_specifier ID L_PARENTHESES params R_PARENTHESES compound_stmt {
         insere($2, $1, "funcao");
         Simbolo* s = busca($2);
         if (s) {
@@ -169,8 +169,7 @@ fun_declaration:
             s->tipos_param = malloc(sizeof(char*) * qtd_param_tmp);
             for (int i = 0; i < qtd_param_tmp; i++)
                 s->tipos_param[i] = tipos_param_tmp[i];
-        }
-        qtd_param_tmp = 0; // Limpa para próxima função
+        }        qtd_param_tmp = 0; // Limpa para próxima função
         //printf("Declaracao de identificador (funcao): %s na linha %d\n", $2, yylineno);
     }
     ;
@@ -192,7 +191,7 @@ param:
         tipos_param_tmp[qtd_param_tmp++] = $1; 
         printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", $2, yylineno);
     }
-    | type_specifier ID LBRACK RBRACK {
+    | type_specifier ID L_SQUARE_BRACKETS R_SQUARE_BRACKETS {
         insere($2, $1, "parametro_vetor");
         tipos_param_tmp[qtd_param_tmp++] = $1; 
         printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", $2, yylineno);
@@ -200,7 +199,7 @@ param:
     ;
 
 compound_stmt:
-    LBRACE local_declarations statement_list RBRACE
+    L_BRACES local_declarations statement_list R_BRACES
     ;
 
 local_declarations:
@@ -223,27 +222,27 @@ statement:
     ;
 
 expression_stmt:
-    expression SEMI
-    | SEMI
+    expression SEMICOLON
+    | SEMICOLON
     ;
 
 print_stmt:
-    PRINT LPAREN expression RPAREN SEMI {emitRO("OUT", ac, 0, 0, "print expression result");
+    PRINT L_PARENTHESES expression R_PARENTHESES SEMICOLON {emitRO("OUT", ac, 0, 0, "print expression result");
 }
     ;
 
 selection_stmt:
-      IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE
-    | IF LPAREN expression RPAREN statement ELSE statement
+      IF L_PARENTHESES expression R_PARENTHESES statement %prec LOWER_THAN_ELSE
+    | IF L_PARENTHESES expression R_PARENTHESES statement ELSE statement
     ;
 
 iteration_stmt:
-    WHILE LPAREN expression RPAREN statement
+    WHILE L_PARENTHESES expression R_PARENTHESES statement
     ;
 
 return_stmt:
-    RETURN SEMI
-    | RETURN expression SEMI
+    RETURN SEMICOLON
+    | RETURN expression SEMICOLON
     ;
 
 expression:
@@ -283,7 +282,7 @@ var:
             $$ = strdup(s->tipo); // Retorna o tipo para ser usado nas verificações
         }
     }
-    | ID LBRACK expression RBRACK {
+    | ID L_SQUARE_BRACKETS expression R_SQUARE_BRACKETS {
         Simbolo* s = busca($1);
         if (s == NULL) {
             printf("ERRO: identificador %s usado como vetor na linha %d mas nao declarado\n", $1, yylineno);
@@ -302,7 +301,7 @@ simple_expression:
     ;
 
 relop:
-    LE | LT | GT | GE | EQ | NE
+    SYMBOL_LE| SYMBOL_LT | SYMBOL_GT | SYMBOL_GE | SYMBOL_EQ | SYMBOL_NE
     ;
 
 additive_expression:
@@ -330,22 +329,22 @@ term:
     ;
 
 mulop:
-    TIMES | OVER
+    MULTIPLICATION | DIVISION
     ;
 
 factor:
-    LPAREN expression RPAREN { $$ = $2; }
+    L_PARENTHESES expression R_PARENTHESES { $$ = $2; }
     | var { $$ = $1; }
     | call { $$ = $1; }
     | NUM { $$ = "int";   
      emitRM("LDC", ac, $1, 0, "load constant into ac");
 }
-    | FNUM { $$ = "float"; }
+    | FLOATING_NUM { $$ = "float"; }
     | PLUS factor { $$ = $2; }
     | MINUS factor { $$ = $2; }
     ;
 call:
-    ID LPAREN args RPAREN {
+    ID L_PARENTHESES args R_PARENTHESES {
         Simbolo* s = busca($1);
         if (s == NULL) {
             printf("ERRO: chamada da funcao %s na linha %d mas nao declarada\n", $1, yylineno);
