@@ -13,7 +13,7 @@ uint ac1 = 1;
 uint gp = 5;
 uint mp = 6;
 uint pc = 7;
-int variable_offset_global = 0;
+int memory_offset_global = 0;
 
 extern FILE *yyin;
 extern FILE *yyout;
@@ -29,7 +29,7 @@ typedef struct Simbolo {
     int usada;
     char** tipos_param; 
     int qtd_param;
-    int variable_offset;
+    int memory_offset;
     struct Simbolo* prox;
 } Simbolo;
 
@@ -64,7 +64,7 @@ void insere(char* nome, char* tipo, char* natureza, int offset) {
     novo->tipo = strdup(tipo);
     novo->natureza = strdup(natureza);
     novo->usada = 0;
-    novo->variable_offset = offset;
+    novo->memory_offset = offset;
 
     novo->prox = tabela;
 
@@ -95,7 +95,7 @@ void imprime_tabela() {
                atual->tipo,
                atual->natureza,
                atual->usada ? "sim" : "nao",
-               atual->variable_offset);
+               atual->memory_offset);
         atual = atual->prox;
     }
     printf("______________________________________________________________\n \n");
@@ -154,13 +154,13 @@ declaration:
 
 var_declaration:
     type_specifier ID SEMICOLON {
-        insere($2, $1, "variavel", variable_offset_global);
-        variable_offset_global += 1;
+        insere($2, $1, "variavel", memory_offset_global);
+        memory_offset_global += 1;
         // printf("Declaracao de identificador (variavel): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
     | type_specifier ID L_SQUARE_BRACKETS NUM R_SQUARE_BRACKETS SEMICOLON {
-        insere($2, $1, "vetor", variable_offset_global);
-        variable_offset_global += 1;
+        insere($2, $1, "vetor", memory_offset_global);
+        memory_offset_global += 1;
         // printf("Declaracao de identificador (vetor): %s do tipo %s na linha %d\n", $2, $1, yylineno);
     }
     ;
@@ -173,8 +173,8 @@ type_specifier:
 
 fun_declaration:
     type_specifier ID L_PARENTHESES params R_PARENTHESES compound_stmt {
-        insere($2, $1, "funcao", variable_offset_global);
-        variable_offset_global +=1;
+        insere($2, $1, "funcao", memory_offset_global);
+        memory_offset_global +=1;
         Simbolo* s = busca($2);
         if (s) {
             s->qtd_param = qtd_param_tmp;
@@ -199,14 +199,14 @@ param_list:
 
 param:
     type_specifier ID {
-        insere($2, $1, "parametro", variable_offset_global);
-        variable_offset_global += 1;
+        insere($2, $1, "parametro", memory_offset_global);
+        memory_offset_global += 1;
         tipos_param_tmp[qtd_param_tmp++] = $1; 
         printf("Declaracao de identificador (parametro escalar): %s na linha %d\n", $2, yylineno);
     }
     | type_specifier ID L_SQUARE_BRACKETS R_SQUARE_BRACKETS {
-        insere($2, $1, "parametro_vetor", variable_offset_global);
-        variable_offset_global += 1;
+        insere($2, $1, "parametro_vetor", memory_offset_global);
+        memory_offset_global += 1;
         tipos_param_tmp[qtd_param_tmp++] = $1; 
         printf("Declaracao de identificador (parametro vetor): %s na linha %d\n", $2, yylineno);
     }
@@ -233,6 +233,7 @@ statement:
     | iteration_stmt
     | return_stmt
     | print_stmt
+    | read_stmt
     ;
 
 expression_stmt:
@@ -244,6 +245,14 @@ print_stmt:
     PRINT L_PARENTHESES expression R_PARENTHESES SEMICOLON {
         //printf("========> expression is %s\n", $3);
         emitRO("OUT", ac, 0, 0, "print expression result");
+}
+    ;
+
+read_stmt:
+    READ L_PARENTHESES expression R_PARENTHESES SEMICOLON {
+        //printf("========> expression is %s\n", $3);
+        emitRO("IN", ac, 0, 0, "print expression result");
+        emitRM("ST", ac, simbolo_atual->memory_offset, gp, "; store ac in offset(gp);");
 }
     ;
 
@@ -266,8 +275,8 @@ expression:
         char* tipo_var = $1;
         char* tipo_expr = $3;
 
-        // s->variable_offset
-        emitRM("ST", ac, simbolo_atual->variable_offset , gp, "; store the value of ac in offset(gp)");
+        // s->memory_offset
+        emitRM("ST", ac, simbolo_atual->memory_offset , gp, "; store the value of ac in offset(gp)");
         //printf("Atribuicao a identificador na linha %d\n", yylineno);
 
         if (tipo_var && tipo_expr) {
@@ -360,7 +369,7 @@ factor:
     | var { 
         $$ = $1; 
         // printf("======> var is %s\n", $1);
-        emitRM("LD", ac, simbolo_atual->variable_offset , gp, "load from offset(gp)");
+        emitRM("LD", ac, simbolo_atual->memory_offset , gp, "load from offset(gp)");
     }
     | call { $$ = $1; }
     | NUM { $$ = "int";   
