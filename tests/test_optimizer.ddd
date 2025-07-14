@@ -1,0 +1,21 @@
+int main() {
+    int a;
+    int b;
+    int c;
+    int d;
+    int result;
+    
+    a = 10;
+    b = 20;
+    c = 30;
+    d = 40;
+    
+    // Expressão complexa que gera vários temporários
+    result = (a + b) * (c - d) + (a * b) / (c + d);
+    
+    print(result);
+    print(a);
+    print(b);
+    print(c);
+    print(d);
+} 
